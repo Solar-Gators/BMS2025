@@ -1,9 +1,9 @@
 #ifndef BMS_CLASS_HPP_
 #define BMS_CLASS_HPP_
 
-#include <main.hpp>
+#include <main.h>
 #include <BQ76952.hpp>
-#include <math.h>
+//#include <math.h>
 
 class BMSClass{
 

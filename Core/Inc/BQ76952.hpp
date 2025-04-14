@@ -10,7 +10,7 @@
 #ifndef BQ76952_HPP_
 #define BQ76952_HPP_
 
-#include <main.hpp>
+#include <main.h>
 #include "BQ769X2_Registers.h"
 #include <math.h>
 
