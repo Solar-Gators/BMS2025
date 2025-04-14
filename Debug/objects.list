@@ -1,4 +1,6 @@
 "./Core/Src/ADS7138.o"
+"./Core/Src/BMSClass.o"
+"./Core/Src/BQ76952.o"
 "./Core/Src/User.o"
 "./Core/Src/freertos.o"
 "./Core/Src/main.o"
