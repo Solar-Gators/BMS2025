@@ -64,7 +64,7 @@ void StartDefaultTask(void *argument)
 void StartTask02(void *argument)
 {
   /* USER CODE BEGIN StartTask02 */
-
+// CURRENT MONITORING TASK
 	uint16_t rawData;
 
 	float low;
@@ -81,11 +81,11 @@ void StartTask02(void *argument)
   }
   /* USER CODE END StartTask02 */
 }
-//voltage stuff
+
 void StartTask03(void *argument)
 {
   /* USER CODE BEGIN StartTask03 */
-
+// VOLTAGE MONITORING TASK
 
 
 	/* Infinite loop */
@@ -101,7 +101,7 @@ void StartTask03(void *argument)
 void StartTask04(void *argument)
 {
   /* USER CODE BEGIN StartTask04 */
-
+// TEMPERATURE MONITORING TASK
 
   /* Infinite loop */
   for(;;)
@@ -117,6 +117,9 @@ void StartTask04(void *argument)
 
 void StartTask05(void *argument)
 {
+  /* USER CODE BEGIN StartTask05 */
+// CAN DATA TRANSMISSION TASK
+
   CAN_TxHeaderTypeDef TxHeader;
   uint8_t TxData[8] = { 0 };
   uint32_t TxMailbox = { 0 };
@@ -156,6 +159,7 @@ void StartTask05(void *argument)
     osDelay(100);
   }
 
+  /* USER CODE END StartTask05 */
 }
 
 void StartTask06(void *argument)
