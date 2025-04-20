@@ -21,10 +21,12 @@ ADS7138 adc = ADS7138(&hi2c2, 0x10);
 uint8_t bqChip1I2CAddress = 0x12; // default is 0x10, should configure to something else if adc is already using that
 uint8_t bqChip2I2CAddress = 0x14;
 
-BQ76952 bqChip1 = BQ76952(&hi2c2, bqChip1I2CAddress);
-BQ76952 bqChip2 = BQ76952(&hi2c2, bqChip2I2CAddress);
+BQ76952 bqChip1 = BQ76952();
+BQ76952 bqChip2 = BQ76952();
 
-BQChips bqChips = bqChips(&bqChip1, bqChip2);
+bqChip1.Init(&hi2c2, bqChip1I2CAddress);
+bqChip2.Init(&hi2c2, BQChip2I2CAddress);
+BQChips bqchips = BQChips(&bqChip1, bqChip2);
 
 union FloatBytes {
     float value;
