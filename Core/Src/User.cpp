@@ -1,9 +1,11 @@
 #include "User.hpp"
+#include "BQChips.hpp"
 
 extern "C" CAN_HandleTypeDef hcan1;
 extern "C" CAN_HandleTypeDef hcan2;
 
 extern "C" I2C_HandleTypeDef hi2c2;
+
 
 
 CAN_RxHeaderTypeDef RxHeader;
@@ -16,6 +18,13 @@ bool contactors_on;
 uint16_t adc_vals[8];
 ADS7138 adc = ADS7138(&hi2c2, 0x10);
 
+uint8_t bqChip1I2CAddress = 0x12; // default is 0x10, should configure to something else if adc is already using that
+uint8_t bqChip2I2CAddress = 0x14;
+
+BQ76952 bqChip1 = BQ76952(&hi2c2, bqChip1I2CAddress);
+BQ76952 bqChip2 = BQ76952(&hi2c2, bqChip2I2CAddress);
+
+BQChips bqChips = bqChips(&bqChip1, bqChip2);
 
 union FloatBytes {
     float value;
@@ -87,7 +96,7 @@ void StartTask03(void *argument)
   /* USER CODE BEGIN StartTask03 */
 // VOLTAGE MONITORING TASK
 
-
+	bqChips.readVoltages();
 	/* Infinite loop */
 	for(;;)
 	{

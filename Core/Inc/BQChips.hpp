@@ -1,18 +1,16 @@
-#ifndef BMS_CLASS_HPP_
-#define BMS_CLASS_HPP_
+#ifndef BQCHIPS_HPP_
+#define BQCHIPS_HPP_
 
 #include <main.h>
 #include <BQ76952.hpp>
 //#include <math.h>
 
-class BMSClass{
+class BQChips{
 
 public:
-	BMSClass(BQ76952 *chip1, BQ76952 *chip2);
+	BQChips(BQ76952 *chip1, BQ76952 *chip2);
 
 	HAL_StatusTypeDef readVoltages();
-	HAL_StatusTypeDef readTemperatures();
-	HAL_StatusTypeDef readCurrents();
 
 	int16_t cellVoltages[29] = {0};				// all cell voltages, in C
 	int16_t totalVoltage = 0;
@@ -30,27 +28,6 @@ public:
 	int16_t getAverageVoltage();
 	int16_t getMaxVoltage();
 	int16_t getMinVoltage();
-
-	int16_t prevCurrents[5] = {0};		// sum of pack currents for both chips, in mA
-	int16_t rollingAvgCurrent = 0;
-	void getPrevCurrents(int16_t *arrData);
-	int16_t getRollingAvgCurrent();
-
-	uint16_t cellTemperatures[29] = {0};			// all temperatures, in C
-	uint16_t miscTemp1 = 0;			// three thermistors, currently unknown function
-	uint16_t miscTemp2 = 0;
-	uint16_t miscTemp3 = 0;
-	uint16_t avgCellTemp = 0;
-	uint16_t maxCellTemp = 0;
-	uint16_t minCellTemp = 0;
-	uint16_t getCellTemperature(BMSCellID cellNum);
-	void getAll29CellTemperatures(uint16_t *arrData);
-	uint16_t getMiscTemp1();
-	uint16_t getMiscTemp2();
-	uint16_t getMiscTemp3();
-	uint16_t getAvgCellTemp();
-	uint16_t getMaxCellTemp();
-	uint16_t getMinCellTemp();
 
 	BQ76952 *pChip1;
 	BQ76952 *pChip2;
