@@ -26,7 +26,7 @@ BQ76952 bqChip2 = BQ76952();
 
 bqChip1.Init(&hi2c2, bqChip1I2CAddress);
 bqChip2.Init(&hi2c2, BQChip2I2CAddress);
-BQChips bqchips = BQChips(&bqChip1, &bqChip2);
+BQChips bqChips = BQChips(&bqChip1, &bqChip2);
 
 union FloatBytes {
     float value;
