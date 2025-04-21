@@ -9,5 +9,5 @@
 ../Core/Src/main.cpp:592:13:void MX_TIM3_Init()	4
 ../Core/Src/main.cpp:641:13:void MX_USB_OTG_FS_HCD_Init()	2
 ../Core/Src/main.cpp:672:13:void MX_GPIO_Init()	1
-../Core/Src/main.cpp:755:6:void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef*)	2
-../Core/Src/main.cpp:772:6:void Error_Handler()	1
+../Core/Src/main.cpp:759:6:void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef*)	2
+../Core/Src/main.cpp:776:6:void Error_Handler()	1

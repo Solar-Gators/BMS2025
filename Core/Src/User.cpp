@@ -1,27 +1,29 @@
 #include "User.hpp"
 
+
+//needed so that the C++ compiler recongnuzes these a C tpye stucts
 extern "C" CAN_HandleTypeDef hcan1;
 extern "C" CAN_HandleTypeDef hcan2;
 
 extern "C" I2C_HandleTypeDef hi2c2;
 
-
+//initalizes CAN RX header
 CAN_RxHeaderTypeDef RxHeader;
-
 uint8_t datacheck = 0;
 uint8_t RxData[8];  // Array to store the received data
 
+//bolean to store contactor state
 bool contactors_on;
 
-uint16_t adc_vals[8];
+//adc object
 ADS7138 adc = ADS7138(&hi2c2, 0x10);
 
 
+//used for converting bytes to floats
 union FloatBytes {
     float value;
     uint8_t bytes[4];
 };
-
 union FloatBytes fb;
 
 
@@ -30,16 +32,11 @@ void CPP_UserSetup(void) {
     // Make sure that timer priorities are configured correctly
     HAL_Delay(10);
 
-
+    //set conactors to be off
     contactors_on = false;
 
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_2, GPIO_PIN_SET);
 
-    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
-
-
-
+    //setup current ADCs
     adc.Init();
     adc.ConfigureOpmode(false, ConvMode_Type::MANUAL);
     adc.ConfigureData(false, DataCfg_AppendType::ID);
@@ -54,8 +51,8 @@ void StartDefaultTask(void *argument)
   /* Infinite loop */
   for(;;)
   {
-	  //HAL_UART_Receive(&huart4, UART4_rxBuffer, 1, HAL_MAX_DELAY);
-	  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_0);
+	//toggle OK Led at 1Hz
+	HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_0);
     osDelay(500);
   }
   /* USER CODE END 5 */
@@ -64,17 +61,16 @@ void StartDefaultTask(void *argument)
 void StartTask02(void *argument)
 {
   /* USER CODE BEGIN StartTask02 */
-
+    //setup
 	uint16_t rawData;
 
-	float low;
 
   for (;;)
   {
-
+	  //take current readings
 	  adc.ConversionReadAutoSequence(&rawData, 1);
-	  low  = ADCToCurrentL(rawData);
-	  fb.value = low;
+	  fb.value = ADCToCurrentL(rawData);
+
 
 
     osDelay(20);
@@ -117,11 +113,11 @@ void StartTask04(void *argument)
 
 void StartTask05(void *argument)
 {
+
+  //setup CAN TX header
   CAN_TxHeaderTypeDef TxHeader;
   uint8_t TxData[8] = { 0 };
   uint32_t TxMailbox = { 0 };
-  int HAL_CAN_BUSY = 0;
-  uint64_t messages_sent = 0;
 
   TxHeader.IDE = CAN_ID_STD; // Standard ID (not extended)
   TxHeader.StdId = 0x4; // 11 bit Identifier
@@ -129,11 +125,14 @@ void StartTask05(void *argument)
   TxHeader.DLC = 8; // 8 bytes being transmitted
   TxData[0] = 4;
 
-
+  //setup stuff for tracking outbound message count
+  int HAL_CAN_BUSY = 0;
+  uint64_t messages_sent = 0;
 
   /* Infinite loop */
   for(;;)
   {
+	  //setup the union
 	  TxData[1] = fb.bytes[0];
 	  TxData[2] = fb.bytes[1];
 	  TxData[3] = fb.bytes[2];
