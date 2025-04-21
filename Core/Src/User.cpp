@@ -77,11 +77,11 @@ void StartTask02(void *argument)
   }
   /* USER CODE END StartTask02 */
 }
-//voltage stuff
+
 void StartTask03(void *argument)
 {
   /* USER CODE BEGIN StartTask03 */
-
+// VOLTAGE MONITORING TASK
 
 
 	/* Infinite loop */
@@ -97,7 +97,7 @@ void StartTask03(void *argument)
 void StartTask04(void *argument)
 {
   /* USER CODE BEGIN StartTask04 */
-
+// TEMPERATURE MONITORING TASK
 
   /* Infinite loop */
   for(;;)
@@ -155,6 +155,7 @@ void StartTask05(void *argument)
     osDelay(100);
   }
 
+  /* USER CODE END StartTask05 */
 }
 
 void StartTask06(void *argument)
