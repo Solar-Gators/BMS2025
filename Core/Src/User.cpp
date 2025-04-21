@@ -23,6 +23,7 @@ BQ76952 bqChip1 = BQ76952();
 BQ76952 bqChip2 = BQ76952();
 
 BQChips bqChips = BQChips(&bqChip1, &bqChip2);
+int16_t cellVoltages[29] = {0};
 
 union FloatBytes {
     float value;
@@ -97,11 +98,12 @@ void StartTask03(void *argument)
   /* USER CODE BEGIN StartTask03 */
 // VOLTAGE MONITORING TASK
 
-	bqChips.readVoltages();
 	/* Infinite loop */
 	for(;;)
 	{
 
+	  bqChips.readVoltages();
+	  bqChips.getAll29CellVoltages(cellVoltages);
 	  osDelay(50);
   }
   /* USER CODE END StartTask03 */

@@ -51,8 +51,10 @@ int16_t BQChips::getCellVoltage(BMSCellID cellID){
 	return cellVoltages[cellID];
 }
 
-void BQChips::getAll29CellVoltages(int16_t *arrData){
-	arrData = cellVoltages;
+void BQChips::getAll29CellVoltages(int16_t arrData[]){
+	for (int i = 0; i < 29; i++){
+		arrData[i] = cellVoltages[i];
+	}
 }
 
 int16_t BQChips::getTotalVoltage(){
