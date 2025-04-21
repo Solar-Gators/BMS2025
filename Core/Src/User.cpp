@@ -18,14 +18,10 @@ bool contactors_on;
 uint16_t adc_vals[8];
 ADS7138 adc = ADS7138(&hi2c2, 0x10);
 
-uint8_t bqChip1I2CAddress = 0x12; // default is 0x10, should configure to something else if adc is already using that
-uint8_t bqChip2I2CAddress = 0x14;
 
 BQ76952 bqChip1 = BQ76952();
 BQ76952 bqChip2 = BQ76952();
 
-bqChip1.Init(&hi2c2, bqChip1I2CAddress);
-bqChip2.Init(&hi2c2, BQChip2I2CAddress);
 BQChips bqChips = BQChips(&bqChip1, &bqChip2);
 
 union FloatBytes {
@@ -49,7 +45,10 @@ void CPP_UserSetup(void) {
 
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
 
-
+	uint8_t bqChip1I2CAddress = 0x12; // default is 0x10, should configure to something else if adc is already using that
+	uint8_t bqChip2I2CAddress = 0x14;
+	bqChip1.Init(&hi2c2, bqChip1I2CAddress);
+	bqChip2.Init(&hi2c2, bqChip2I2CAddress);
 
     adc.Init();
     adc.ConfigureOpmode(false, ConvMode_Type::MANUAL);

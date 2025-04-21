@@ -1,0 +1,12 @@
+../Core/Src/User.cpp:36:6:void CPP_UserSetup()	16	static
+../Core/Src/User.cpp:61:6:void StartDefaultTask(void*)	16	static
+../Core/Src/User.cpp:74:6:void StartTask02(void*)	24	static
+../Core/Src/User.cpp:95:6:void StartTask03(void*)	16	static
+../Core/Src/User.cpp:111:6:void StartTask04(void*)	16	static
+../Core/Src/User.cpp:128:6:void StartTask05(void*)	80	static
+../Core/Src/User.cpp:175:6:void StartTask06(void*)	16	static
+../Core/Src/User.cpp:198:6:void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef*)	16	static
+../Core/Src/User.cpp:225:7:float ADCToCurrentL(uint16_t)	16	static
+../Core/Src/User.cpp:237:7:float ADCToCurrentH(uint16_t)	16	static
+../Core/Src/User.cpp:246:1:void __static_initialization_and_destruction_0()	8	static
+../Core/Src/User.cpp:246:1:cpp)	8	static
