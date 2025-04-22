@@ -4,7 +4,9 @@
 extern "C" CAN_HandleTypeDef hcan1;
 extern "C" CAN_HandleTypeDef hcan2;
 
+extern "C" I2C_HandleTypeDef hi2c1;
 extern "C" I2C_HandleTypeDef hi2c2;
+extern "C" I2C_HandleTypeDef hi2c3;
 
 
 
@@ -23,7 +25,6 @@ BQ76952 bqChip1 = BQ76952();
 BQ76952 bqChip2 = BQ76952();
 
 BQChips bqChips = BQChips(&bqChip1, &bqChip2);
-int16_t cellVoltages[29] = {0};
 
 union FloatBytes {
     float value;
@@ -46,10 +47,10 @@ void CPP_UserSetup(void) {
 
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
 
-	uint8_t bqChip1I2CAddress = 0x12; // default is 0x10, should configure to something else if adc is already using that
-	uint8_t bqChip2I2CAddress = 0x14;
-	bqChip1.Init(&hi2c2, bqChip1I2CAddress);
-	bqChip2.Init(&hi2c2, bqChip2I2CAddress);
+	uint8_t bqChip1I2CAddress = 0x10; // default is 0x10, should configure to something else if adc is already using that
+	uint8_t bqChip2I2CAddress = 0x10;
+	bqChip1.Init(&hi2c1, bqChip1I2CAddress);
+	bqChip2.Init(&hi2c3, bqChip2I2CAddress);
 
     adc.Init();
     adc.ConfigureOpmode(false, ConvMode_Type::MANUAL);
@@ -98,6 +99,7 @@ void StartTask03(void *argument)
   /* USER CODE BEGIN StartTask03 */
 // VOLTAGE MONITORING TASK
 
+	int16_t cellVoltages[29] = {0};
 	/* Infinite loop */
 	for(;;)
 	{
