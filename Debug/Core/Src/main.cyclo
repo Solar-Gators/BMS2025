@@ -1,0 +1,13 @@
+../Core/Src/main.cpp:138:5:int main()	2
+../Core/Src/main.cpp:260:6:void SystemClock_Config()	4
+../Core/Src/main.cpp:309:13:void MX_CAN1_Init()	2
+../Core/Src/main.cpp:362:13:void MX_CAN2_Init()	2
+../Core/Src/main.cpp:399:13:void MX_I2C2_Init()	4
+../Core/Src/main.cpp:447:13:void MX_I2C3_Init()	4
+../Core/Src/main.cpp:495:13:void MX_I2C4_Init()	4
+../Core/Src/main.cpp:543:13:void MX_TIM2_Init()	4
+../Core/Src/main.cpp:592:13:void MX_TIM3_Init()	4
+../Core/Src/main.cpp:641:13:void MX_USB_OTG_FS_HCD_Init()	2
+../Core/Src/main.cpp:672:13:void MX_GPIO_Init()	1
+../Core/Src/main.cpp:759:6:void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef*)	2
+../Core/Src/main.cpp:776:6:void Error_Handler()	1

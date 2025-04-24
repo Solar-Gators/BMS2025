@@ -10,7 +10,7 @@
 #ifndef BQ76952_HPP_
 #define BQ76952_HPP_
 
-#include <main.hpp>
+#include <main.h>
 #include "BQ769X2_Registers.h"
 #include <math.h>
 
@@ -23,6 +23,7 @@ static const uint8_t temp_registers[] = {BQ769X2_CMD_TEMP_TS1, BQ769X2_CMD_TEMP_
 
 class BQ76952 {
 public:
+	BQ76952();
     HAL_StatusTypeDef Init(I2C_HandleTypeDef *hi2c);
     HAL_StatusTypeDef Init(I2C_HandleTypeDef *hi2c, uint8_t i2cAddress);
     uint8_t i2cAddressWrite;

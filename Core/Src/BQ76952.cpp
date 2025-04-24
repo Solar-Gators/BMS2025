@@ -5,6 +5,10 @@
 #ifndef BQ76952_
 #define BQ76952_
 
+BQ76952::BQ76952(){
+
+}
+
 HAL_StatusTypeDef BQ76952::Init(I2C_HandleTypeDef *hi2c, uint8_t i2cAddress){
     hi2c_ = hi2c;
     i2cAddressWrite = i2cAddress;

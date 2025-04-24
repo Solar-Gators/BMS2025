@@ -1,0 +1,25 @@
+../Core/Src/ADS7138.cpp:5:1:ADS7138::ADS7138(I2C_HandleTypeDef*, uint8_t)	1
+../Core/Src/ADS7138.cpp:10:19:HAL_StatusTypeDef ADS7138::Init()	5
+../Core/Src/ADS7138.cpp:35:19:HAL_StatusTypeDef ADS7138::TestI2C()	6
+../Core/Src/ADS7138.cpp:64:19:HAL_StatusTypeDef ADS7138::ConfigureStatistics(bool)	4
+../Core/Src/ADS7138.cpp:85:19:HAL_StatusTypeDef ADS7138::ConfigureData(bool, DataCfg_AppendType)	5
+../Core/Src/ADS7138.cpp:114:19:HAL_StatusTypeDef ADS7138::ConfigureOversampling(OsrCfg_Type)	2
+../Core/Src/ADS7138.cpp:128:19:HAL_StatusTypeDef ADS7138::ConfigureOpmode(bool, ConvMode_Type)	3
+../Core/Src/ADS7138.cpp:151:19:HAL_StatusTypeDef ADS7138::ConfigureOpmode(bool, ConvMode_Type, Osc_Type, uint8_t)	3
+../Core/Src/ADS7138.cpp:175:19:HAL_StatusTypeDef ADS7138::ConfigurePinMode(uint8_t)	2
+../Core/Src/ADS7138.cpp:186:19:HAL_StatusTypeDef ADS7138::ConfigureSequence(uint8_t)	2
+../Core/Src/ADS7138.cpp:196:19:HAL_StatusTypeDef ADS7138::ConfigureSequenceAll()	1
+../Core/Src/ADS7138.cpp:204:19:HAL_StatusTypeDef ADS7138::ConfigureSequenceMode(SeqMode_Type)	2
+../Core/Src/ADS7138.cpp:217:19:HAL_StatusTypeDef ADS7138::ManualSelectChannel(uint8_t)	3
+../Core/Src/ADS7138.cpp:227:19:HAL_StatusTypeDef ADS7138::StartConversion()	3
+../Core/Src/ADS7138.cpp:244:19:HAL_StatusTypeDef ADS7138::StartSequence()	1
+../Core/Src/ADS7138.cpp:251:19:HAL_StatusTypeDef ADS7138::StopSequence()	1
+../Core/Src/ADS7138.cpp:263:19:HAL_StatusTypeDef ADS7138::ConversionReadManual(uint16_t*, uint8_t)	8
+../Core/Src/ADS7138.cpp:300:19:HAL_StatusTypeDef ADS7138::ConversionReadAutoSequence(uint16_t*, uint8_t)	4
+../Core/Src/ADS7138.cpp:333:19:HAL_StatusTypeDef ADS7138::InitAutonomous(uint8_t)	5
+../Core/Src/ADS7138.cpp:357:19:HAL_StatusTypeDef ADS7138::ReadChannel(uint8_t, uint16_t*)	3
+../Core/Src/ADS7138.cpp:376:19:HAL_StatusTypeDef ADS7138::ReadReg(ADS7138_Register, uint8_t*)	3
+../Core/Src/ADS7138.cpp:391:19:HAL_StatusTypeDef ADS7138::WriteReg(ADS7138_Register, uint8_t)	2
+../Core/Src/ADS7138.cpp:409:19:HAL_StatusTypeDef ADS7138::SetRegBits(ADS7138_Register, uint8_t)	3
+../Core/Src/ADS7138.cpp:427:19:HAL_StatusTypeDef ADS7138::ClearRegBits(ADS7138_Register, uint8_t)	3
+../Core/Src/ADS7138.cpp:442:19:HAL_StatusTypeDef ADS7138::AutoSelectChannels(uint8_t)	2
