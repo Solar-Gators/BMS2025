@@ -22,6 +22,12 @@ bool contactors_on;
 //adc object
 ADS7138 adc = ADS7138(&hi2c2, 0x10);
 
+ADS7138 temp_adcs[4] = {ADS7138(&hi2c4, 0x17),
+                        ADS7138(&hi2c4, 0x16),
+                        ADS7138(&hi2c4, 0x15),
+					    ADS7138(&hi2c4, 0x14)};
+
+
 
 BQ76952 bqChip1 = BQ76952(); // 16 cells = i2c3
 BQ76952 bqChip2 = BQ76952(); // 13 cells = i2c1
@@ -58,6 +64,14 @@ void CPP_UserSetup(void) {
     adc.ConfigureOpmode(false, ConvMode_Type::MANUAL);
     adc.ConfigureData(false, DataCfg_AppendType::ID);
     adc.AutoSelectChannels((0x1 << 0));
+
+    //setup temperature ADCs
+    for (int i = 0; i < 4; i++) {
+    	temp_adcs[i].Init();
+    	temp_adcs[i].ConfigureOpmode(false, ConvMode_Type::MANUAL);
+    	temp_adcs[i].ConfigureData(false, DataCfg_AppendType::ID);
+    	temp_adcs[i].AutoSelectChannels((0x1 << 0));
+    }
 
 }
 
@@ -250,4 +264,17 @@ float ADCToCurrentH(uint16_t adc_val) {
     return (float)adc_val * m + b;
 }
 
+float ADCToTemp(uint16_t adc_val) {
+    // Leading coefficient of quadratic estimator
+    static constexpr float a = 11.49;
+
+    // Linear coefficient of quadratic estimator
+    static constexpr float b = -61.03;
+
+    // Constant offset of quadratic estimator
+    static constexpr float c = 93.56;
+
+    // Convert ADC value to current
+    return a * (float)adc_val * (float)adc_val + (float)adc_val * b + c;
+}
 
