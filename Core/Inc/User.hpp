@@ -7,8 +7,9 @@
 #include "ADS7138.hpp"
 
 #include "cmsis_os.h"
+#include "sg_can.h"
 
-
+extern "C" CANController Controller;
 
 void CPP_UserSetup(void);
 

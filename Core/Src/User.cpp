@@ -2,6 +2,7 @@
 #include "BQChips.hpp"
 
 
+
 //needed so that the C++ compiler recongnuzes these a C tpye stucts
 extern "C" CAN_HandleTypeDef hcan1;
 extern "C" CAN_HandleTypeDef hcan2;
@@ -34,7 +35,32 @@ union FloatBytes {
 };
 union FloatBytes fb;
 
+void RxCallback(uint8_t* RxData)
+{
+//  if (HAL_CAN_GetRxMessage(hcan1, CAN_RX_FIFO0, &RxHeader, RxData) != HAL_OK)
+//  {
+//    Error_Handler();
+//  }
 
+//  if (RxHeader.StdId == 0x7FF){
+  if(RxData[0] == 1){
+	  //byte 1
+	  //ignition switch
+	  if((RxData[1] & 0x80) != 0x00){
+		  //preform shut down sequence
+	  }
+
+	  if((RxData[1] & 0x08) != 0x00){
+		  contactors_on = true; // turn brakes on
+	  }else{
+		  contactors_on = false; // turn breaks off
+	  }
+
+
+
+  }
+//  }
+}
 
 void CPP_UserSetup(void) {
     // Make sure that timer priorities are configured correctly
@@ -134,19 +160,25 @@ void StartTask05(void *argument)
 {
 
   //setup CAN TX header
-  CAN_TxHeaderTypeDef TxHeader;
+  // CAN_TxHeaderTypeDef TxHeader;
   uint8_t TxData[8] = { 0 };
-  uint32_t TxMailbox = { 0 };
+  // uint32_t TxMailbox = { 0 };
 
-  TxHeader.IDE = CAN_ID_STD; // Standard ID (not extended)
-  TxHeader.StdId = 0x4; // 11 bit Identifier
-  TxHeader.RTR = CAN_RTR_DATA; // Std RTR Data frame
-  TxHeader.DLC = 8; // 8 bytes being transmitted
+  // TxHeader.IDE = CAN_ID_STD; // Standard ID (not extended)
+  // TxHeader.StdId = 0x4; // 11 bit Identifier
+  // TxHeader.RTR = CAN_RTR_DATA; // Std RTR Data frame
+  // TxHeader.DLC = 8; // 8 bytes being transmitted
   TxData[0] = 4;
 
+  CANFrame ADCMessage(0, 0, 2, 8);
+  ADCMessage.LoadData(TxData, 8);
+
+  Controller.Send(&ADCMessage);
+  Controller.AddRxMessage(&ADCMessage, &RxCallback);
+
   //setup stuff for tracking outbound message count
-  int HAL_CAN_BUSY = 0;
-  uint64_t messages_sent = 0;
+  //int HAL_CAN_BUSY = 0;
+  //uint64_t messages_sent = 0;
 
   /* Infinite loop */
   for(;;)
@@ -157,18 +189,22 @@ void StartTask05(void *argument)
 	  TxData[3] = fb.bytes[2];
 	  TxData[4] = fb.bytes[3];
 
-	  while (!HAL_CAN_GetTxMailboxesFreeLevel(&hcan1));
-	  HAL_StatusTypeDef status;
-	  status = HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox);
-	  messages_sent++;
-	  if (status == HAL_ERROR)
-	  {
-		  Error_Handler();
-	  }
-	  else if (status == HAL_BUSY)
-	  {
-	  HAL_CAN_BUSY++;
-	  }
+	  ADCMessage.LoadData(TxData, 8);
+	  Controller.Send(&ADCMessage);
+
+
+	  // while (!HAL_CAN_GetTxMailboxesFreeLevel(&hcan1));
+	  // HAL_StatusTypeDef status;
+	  // status = HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox);
+	  // messages_sent++;
+	  // if (status == HAL_ERROR)
+	  // {
+		//   Error_Handler();
+	  // }
+	  // else if (status == HAL_BUSY)
+	  // {
+	  // HAL_CAN_BUSY++;
+	  // }
 
 
     osDelay(100);
@@ -199,33 +235,6 @@ void StartTask06(void *argument)
   /* USER CODE END StartTask06 */
 }
 
-
-void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1)
-{
-  if (HAL_CAN_GetRxMessage(hcan1, CAN_RX_FIFO0, &RxHeader, RxData) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  if (RxHeader.StdId == 0x7FF){
-	  if(RxData[0] == 1){
-		  //byte 1
-		  //ignition switch
-		  if((RxData[1] & 0x80) != 0x00){
-			  //preform shut down sequence
-		  }
-
-		  if((RxData[1] & 0x08) != 0x00){
-			  contactors_on = true; // turn brakes on
-		  }else{
-			  contactors_on = false; // turn breaks off
-		  }
-
-
-
-	  }
-  }
-}
 
 float ADCToCurrentL(uint16_t adc_val) {
     // Constant slope for linear estimator
