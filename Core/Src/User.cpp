@@ -4,9 +4,9 @@
 extern "C" CAN_HandleTypeDef hcan1;
 extern "C" CAN_HandleTypeDef hcan2;
 
-extern "C" I2C_HandleTypeDef hi2c1;
 extern "C" I2C_HandleTypeDef hi2c2;
 extern "C" I2C_HandleTypeDef hi2c3;
+extern "C" I2C_HandleTypeDef hi2c4;
 
 
 
@@ -21,8 +21,8 @@ uint16_t adc_vals[8];
 ADS7138 adc = ADS7138(&hi2c2, 0x10);
 
 
-BQ76952 bqChip1 = BQ76952();
-BQ76952 bqChip2 = BQ76952();
+BQ76952 bqChip1 = BQ76952(); // 16 cells = i2c3
+BQ76952 bqChip2 = BQ76952(); // 13 cells = i2c1
 
 BQChips bqChips = BQChips(&bqChip1, &bqChip2);
 
@@ -49,8 +49,8 @@ void CPP_UserSetup(void) {
 
 	uint8_t bqChip1I2CAddress = 0x10; // default is 0x10, should configure to something else if adc is already using that
 	uint8_t bqChip2I2CAddress = 0x10;
-	bqChip1.Init(&hi2c1, bqChip1I2CAddress);
-	bqChip2.Init(&hi2c3, bqChip2I2CAddress);
+	bqChip1.Init(&hi2c3, bqChip1I2CAddress);
+	bqChip2.Init(&hi2c4, bqChip2I2CAddress);
 
     adc.Init();
     adc.ConfigureOpmode(false, ConvMode_Type::MANUAL);
