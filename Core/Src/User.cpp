@@ -1,4 +1,5 @@
 #include "User.hpp"
+#include "BQChips.hpp"
 
 
 //needed so that the C++ compiler recongnuzes these a C tpye stucts
@@ -6,6 +7,9 @@ extern "C" CAN_HandleTypeDef hcan1;
 extern "C" CAN_HandleTypeDef hcan2;
 
 extern "C" I2C_HandleTypeDef hi2c2;
+extern "C" I2C_HandleTypeDef hi2c3;
+extern "C" I2C_HandleTypeDef hi2c4;
+
 
 //initalizes CAN RX header
 CAN_RxHeaderTypeDef RxHeader;
@@ -19,7 +23,11 @@ bool contactors_on;
 ADS7138 adc = ADS7138(&hi2c2, 0x10);
 
 
-//used for converting bytes to floats
+BQ76952 bqChip1 = BQ76952(); // 16 cells = i2c3
+BQ76952 bqChip2 = BQ76952(); // 13 cells = i2c1
+
+BQChips bqChips = BQChips(&bqChip1, &bqChip2);
+
 union FloatBytes {
     float value;
     uint8_t bytes[4];
@@ -35,6 +43,15 @@ void CPP_UserSetup(void) {
     //set conactors to be off
     contactors_on = false;
 
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_2, GPIO_PIN_SET);
+
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
+
+	uint8_t bqChip1I2CAddress = 0x10; // default is 0x10, should configure to something else if adc is already using that
+	uint8_t bqChip2I2CAddress = 0x10;
+	bqChip1.Init(&hi2c3, bqChip1I2CAddress);
+	bqChip2.Init(&hi2c4, bqChip2I2CAddress);
 
     //setup current ADCs
     adc.Init();
@@ -83,11 +100,13 @@ void StartTask03(void *argument)
   /* USER CODE BEGIN StartTask03 */
 // VOLTAGE MONITORING TASK
 
-
+	int16_t cellVoltages[29] = {0};
 	/* Infinite loop */
 	for(;;)
 	{
 
+	  bqChips.readVoltages();
+	  bqChips.getAll29CellVoltages(cellVoltages);
 	  osDelay(50);
   }
   /* USER CODE END StartTask03 */
