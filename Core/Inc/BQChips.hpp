@@ -22,7 +22,7 @@ public:
 		CHIP2_CELL1, CHIP2_CELL2, CHIP2_CELL3, CHIP2_CELL4, CHIP2_CELL5, CHIP2_CELL6, CHIP2_CELL7, CHIP2_CELL8,
 		CHIP2_CELL9, CHIP2_CELL10, CHIP2_CELL11, CHIP2_CELL12, CHIP2_CELL13};
 
-	int16_t getCellVoltage(BMSCellID cellID);
+	int16_t getCellVoltage(int cellID);
 	void getAll29CellVoltages(int16_t *arrData);
 	int16_t getTotalVoltage();
 	int16_t getAverageVoltage();

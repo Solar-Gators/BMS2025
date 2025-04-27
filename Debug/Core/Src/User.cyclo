@@ -1,12 +1,13 @@
-../Core/Src/User.cpp:38:6:void CPP_UserSetup()	1
-../Core/Src/User.cpp:63:6:void StartDefaultTask(void*)	1
-../Core/Src/User.cpp:76:6:void StartTask02(void*)	1
-../Core/Src/User.cpp:97:6:void StartTask03(void*)	1
-../Core/Src/User.cpp:115:6:void StartTask04(void*)	1
-../Core/Src/User.cpp:132:6:void StartTask05(void*)	4
-../Core/Src/User.cpp:179:6:void StartTask06(void*)	2
-../Core/Src/User.cpp:202:6:void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef*)	5
-../Core/Src/User.cpp:229:7:float ADCToCurrentL(uint16_t)	1
-../Core/Src/User.cpp:241:7:float ADCToCurrentH(uint16_t)	1
-../Core/Src/User.cpp:250:1:void __static_initialization_and_destruction_0()	1
-../Core/Src/User.cpp:250:1:cpp)	1
+../Core/Src/User.cpp:51:6:void CPP_UserSetup()	1
+../Core/Src/User.cpp:76:6:void StartDefaultTask(void*)	1
+../Core/Src/User.cpp:89:6:void StartTask02(void*)	1
+../Core/Src/User.cpp:110:6:void StartTask03(void*)	1
+../Core/Src/User.cpp:137:6:void StartTask04(void*)	1
+../Core/Src/User.cpp:154:6:void StartTask05(void*)	4
+../Core/Src/User.cpp:201:6:void StartTask06(void*)	2
+../Core/Src/User.cpp:224:6:void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef*)	5
+../Core/Src/User.cpp:251:7:float ADCToCurrentL(uint16_t)	1
+../Core/Src/User.cpp:263:7:float ADCToCurrentH(uint16_t)	1
+../Core/Src/User.cpp:275:7:float ADCToTemperature(uint16_t)	1
+../Core/Src/User.cpp:284:1:void __static_initialization_and_destruction_0()	1
+../Core/Src/User.cpp:284:1:cpp)	1

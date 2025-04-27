@@ -26,6 +26,19 @@ BQ76952 bqChip2 = BQ76952(); // 13 cells = i2c1
 
 BQChips bqChips = BQChips(&bqChip1, &bqChip2);
 
+struct BMSData {
+	uint16_t highVoltage_mV;
+	uint16_t lowVoltage_mV;
+	uint16_t avgVoltage_mV;
+	uint16_t totalVoltage_mV;
+
+	float lowCurrent_A;
+	float highCurrent_A;
+
+
+
+};
+
 union FloatBytes {
     float value;
     uint8_t bytes[4];
@@ -100,12 +113,21 @@ void StartTask03(void *argument)
 // VOLTAGE MONITORING TASK
 
 	int16_t cellVoltages[29] = {0};
+	int16_t cell0Voltage = 0;
+	int16_t cell1Voltage = 0;
+	int16_t cell15Voltage = 0;
+	int16_t cell16Voltage = 0;
 	/* Infinite loop */
 	for(;;)
 	{
 
 	  bqChips.readVoltages();
 	  bqChips.getAll29CellVoltages(cellVoltages);
+	  cell0Voltage = bqChips.getCellVoltage(0);
+	  cell1Voltage = bqChips.getCellVoltage(1);
+	  cell15Voltage = bqChips.getCellVoltage(15);
+	  cell16Voltage = bqChips.getCellVoltage(16);
+
 	  osDelay(50);
   }
   /* USER CODE END StartTask03 */
@@ -248,5 +270,18 @@ float ADCToCurrentH(uint16_t adc_val) {
     // Convert ADC value to current
     return (float)adc_val * m + b;
 }
+
+
+float ADCToTemperature(uint16_t adc_val) {
+	// temperature = Ax^2 + Bx + C, where x = voltage across adc
+	static constexpr float thermCoeffA = 11.49;
+	static constexpr float thermCoeffB = -61.03;
+	static constexpr float thermCoeffC = 93.56;
+
+	float x = ((float)adc_val) * (3.3/4096.0);
+
+	return (thermCoeffA * x*x) + (thermCoeffB * x) + thermCoeffC;
+}
+
 
 

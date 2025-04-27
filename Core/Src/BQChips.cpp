@@ -20,8 +20,8 @@ HAL_StatusTypeDef BQChips::readVoltages(){
 	HAL_StatusTypeDef status = pChip1 -> ReadVoltages();
 	if (status != HAL_OK)	{return status;}
 
-	status = pChip2 -> ReadVoltages();
-	if (status != HAL_OK)	{return status;}
+//	status = pChip2 -> ReadVoltages();
+//	if (status != HAL_OK)	{return status;}
 
 	for (int i = 0; i < 16; i++){
 		cellVoltages[i] = pChip1 -> cell_voltages_[i];
@@ -30,7 +30,7 @@ HAL_StatusTypeDef BQChips::readVoltages(){
 		cellVoltages[j+16] = pChip2 -> cell_voltages_[j];
 	}
 
-	totalVoltage = (pChip1 -> stack_voltage_) + (pChip2 -> stack_voltage_); // TODO: check that this shouldn't be pack_voltage
+	totalVoltage = (pChip1 -> stack_voltage_) + (pChip2 -> stack_voltage_); // check that this shouldn't be pack_voltage
 	averageVoltage = ((pChip1 -> avg_cell_voltage_) + (pChip2 -> avg_cell_voltage_))/2;
 
 	maxVoltage = pChip1 -> high_cell_voltage_;
@@ -47,7 +47,7 @@ HAL_StatusTypeDef BQChips::readVoltages(){
 }
 
 //voltages
-int16_t BQChips::getCellVoltage(BMSCellID cellID){
+int16_t BQChips::getCellVoltage(int cellID){
 	return cellVoltages[cellID];
 }
 
