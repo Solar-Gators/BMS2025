@@ -2,7 +2,7 @@
 #include "BQChips.hpp"
 
 
-//needed so that the C++ compiler recongnuzes these a C tpye stucts
+//needed so that the C++ compiler recognizes these a C type structs
 extern "C" CAN_HandleTypeDef hcan1;
 extern "C" CAN_HandleTypeDef hcan2;
 
@@ -11,12 +11,12 @@ extern "C" I2C_HandleTypeDef hi2c3;
 extern "C" I2C_HandleTypeDef hi2c4;
 
 
-//initalizes CAN RX header
+//initializes CAN RX header
 CAN_RxHeaderTypeDef RxHeader;
 uint8_t datacheck = 0;
 uint8_t RxData[8];  // Array to store the received data
 
-//bolean to store contactor state
+//boolean to store contactor state
 bool contactors_on;
 
 //adc object
@@ -46,7 +46,7 @@ void CPP_UserSetup(void) {
     // Make sure that timer priorities are configured correctly
     HAL_Delay(10);
 
-    //set conactors to be off
+    //set contactors to be off
     contactors_on = false;
 
     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
@@ -131,14 +131,18 @@ void StartTask04(void *argument)
 {
   /* USER CODE BEGIN StartTask04 */
 // TEMPERATURE MONITORING TASK
+	uint16_t rawData;
 
-  /* Infinite loop */
-  for(;;)
+
+  for (;;)
   {
+	  //take current readings
+	  adc.ConversionReadAutoSequence(&rawData, 1);
+	  fb.value = ADCToCurrentL(rawData);
 
 
 
-    osDelay(100);
+    osDelay(20);
   }
   /* USER CODE END StartTask04 */
 }
@@ -274,7 +278,10 @@ float ADCToTemp(uint16_t adc_val) {
     // Constant offset of quadratic estimator
     static constexpr float c = 93.56;
 
-    // Convert ADC value to current
-    return a * (float)adc_val * (float)adc_val + (float)adc_val * b + c;
+    // Convert ADC value to voltage
+    float vol = (float)adc_val * 3.3 / 4096;
+
+    // Convert voltage to temperature
+    return a * vol * vol + b * vol + c;
 }
 
