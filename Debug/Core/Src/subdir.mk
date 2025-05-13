@@ -12,6 +12,7 @@ CPP_SRCS += \
 ../Core/Src/main.cpp 
 
 C_SRCS += \
+../Core/Src/INA226.c \
 ../Core/Src/freertos.c \
 ../Core/Src/stm32l4xx_hal_msp.c \
 ../Core/Src/stm32l4xx_hal_timebase_tim.c \
@@ -21,6 +22,7 @@ C_SRCS += \
 ../Core/Src/system_stm32l4xx.c 
 
 C_DEPS += \
+./Core/Src/INA226.d \
 ./Core/Src/freertos.d \
 ./Core/Src/stm32l4xx_hal_msp.d \
 ./Core/Src/stm32l4xx_hal_timebase_tim.d \
@@ -33,6 +35,7 @@ OBJS += \
 ./Core/Src/ADS7138.o \
 ./Core/Src/BQ76952.o \
 ./Core/Src/BQChips.o \
+./Core/Src/INA226.o \
 ./Core/Src/User.o \
 ./Core/Src/freertos.o \
 ./Core/Src/main.o \
@@ -60,7 +63,7 @@ Core/Src/%.o Core/Src/%.su Core/Src/%.cyclo: ../Core/Src/%.c Core/Src/subdir.mk
 clean: clean-Core-2f-Src
 
 clean-Core-2f-Src:
-	-$(RM) ./Core/Src/ADS7138.cyclo ./Core/Src/ADS7138.d ./Core/Src/ADS7138.o ./Core/Src/ADS7138.su ./Core/Src/BQ76952.cyclo ./Core/Src/BQ76952.d ./Core/Src/BQ76952.o ./Core/Src/BQ76952.su ./Core/Src/BQChips.cyclo ./Core/Src/BQChips.d ./Core/Src/BQChips.o ./Core/Src/BQChips.su ./Core/Src/User.cyclo ./Core/Src/User.d ./Core/Src/User.o ./Core/Src/User.su ./Core/Src/freertos.cyclo ./Core/Src/freertos.d ./Core/Src/freertos.o ./Core/Src/freertos.su ./Core/Src/main.cyclo ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/stm32l4xx_hal_msp.cyclo ./Core/Src/stm32l4xx_hal_msp.d ./Core/Src/stm32l4xx_hal_msp.o ./Core/Src/stm32l4xx_hal_msp.su ./Core/Src/stm32l4xx_hal_timebase_tim.cyclo ./Core/Src/stm32l4xx_hal_timebase_tim.d ./Core/Src/stm32l4xx_hal_timebase_tim.o ./Core/Src/stm32l4xx_hal_timebase_tim.su ./Core/Src/stm32l4xx_it.cyclo ./Core/Src/stm32l4xx_it.d ./Core/Src/stm32l4xx_it.o ./Core/Src/stm32l4xx_it.su ./Core/Src/syscalls.cyclo ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/syscalls.su ./Core/Src/sysmem.cyclo ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/sysmem.su ./Core/Src/system_stm32l4xx.cyclo ./Core/Src/system_stm32l4xx.d ./Core/Src/system_stm32l4xx.o ./Core/Src/system_stm32l4xx.su
+	-$(RM) ./Core/Src/ADS7138.cyclo ./Core/Src/ADS7138.d ./Core/Src/ADS7138.o ./Core/Src/ADS7138.su ./Core/Src/BQ76952.cyclo ./Core/Src/BQ76952.d ./Core/Src/BQ76952.o ./Core/Src/BQ76952.su ./Core/Src/BQChips.cyclo ./Core/Src/BQChips.d ./Core/Src/BQChips.o ./Core/Src/BQChips.su ./Core/Src/INA226.cyclo ./Core/Src/INA226.d ./Core/Src/INA226.o ./Core/Src/INA226.su ./Core/Src/User.cyclo ./Core/Src/User.d ./Core/Src/User.o ./Core/Src/User.su ./Core/Src/freertos.cyclo ./Core/Src/freertos.d ./Core/Src/freertos.o ./Core/Src/freertos.su ./Core/Src/main.cyclo ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/stm32l4xx_hal_msp.cyclo ./Core/Src/stm32l4xx_hal_msp.d ./Core/Src/stm32l4xx_hal_msp.o ./Core/Src/stm32l4xx_hal_msp.su ./Core/Src/stm32l4xx_hal_timebase_tim.cyclo ./Core/Src/stm32l4xx_hal_timebase_tim.d ./Core/Src/stm32l4xx_hal_timebase_tim.o ./Core/Src/stm32l4xx_hal_timebase_tim.su ./Core/Src/stm32l4xx_it.cyclo ./Core/Src/stm32l4xx_it.d ./Core/Src/stm32l4xx_it.o ./Core/Src/stm32l4xx_it.su ./Core/Src/syscalls.cyclo ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/syscalls.su ./Core/Src/sysmem.cyclo ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/sysmem.su ./Core/Src/system_stm32l4xx.cyclo ./Core/Src/system_stm32l4xx.d ./Core/Src/system_stm32l4xx.o ./Core/Src/system_stm32l4xx.su
 
 .PHONY: clean-Core-2f-Src
 

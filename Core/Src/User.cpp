@@ -1,5 +1,6 @@
 #include "User.hpp"
 #include "BQChips.hpp"
+#include "INA226.h"
 
 
 //needed so that the C++ compiler recongnuzes these a C tpye stucts
@@ -33,6 +34,10 @@ union FloatBytes {
     uint8_t bytes[4];
 };
 union FloatBytes fb;
+
+INA226_t INA226_IVP;
+
+if(INA226_Initialize(&INA226_IVP, &hi2c2, 10, 20) != HAL_OK){ Error_Handler();}
 
 
 
@@ -151,11 +156,25 @@ void StartTask05(void *argument)
   /* Infinite loop */
   for(;;)
   {
+
+	  INA226_IVP.current = getCurrentAmp(&INA226_IVP);
+	  INA226_IVP.power = getPowerWatt(&INA226_IVP);
+
+	  union FloatBytes current;
+	 current.f = INA226_IVP.current;
+
+
 	  //setup the union
 	  TxData[1] = fb.bytes[0];
 	  TxData[2] = fb.bytes[1];
 	  TxData[3] = fb.bytes[2];
 	  TxData[4] = fb.bytes[3];
+
+	  //Assign CAN message
+	  TxData[4] = power.bytes[0]; //LSB
+	  TxData[5] = power.bytes[1];
+	  TxData[6] = power.bytes[2];
+	  TxData[7] = power.bytes[3]; //MSB
 
 	  while (!HAL_CAN_GetTxMailboxesFreeLevel(&hcan1));
 	  HAL_StatusTypeDef status;
