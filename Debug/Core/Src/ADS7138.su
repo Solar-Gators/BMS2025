@@ -1,25 +1,12 @@
-../Core/Src/ADS7138.cpp:5:1:ADS7138::ADS7138(I2C_HandleTypeDef*, uint8_t)	24	static
-../Core/Src/ADS7138.cpp:10:19:HAL_StatusTypeDef ADS7138::Init()	24	static
-../Core/Src/ADS7138.cpp:35:19:HAL_StatusTypeDef ADS7138::TestI2C()	24	static
-../Core/Src/ADS7138.cpp:64:19:HAL_StatusTypeDef ADS7138::ConfigureStatistics(bool)	24	static
-../Core/Src/ADS7138.cpp:85:19:HAL_StatusTypeDef ADS7138::ConfigureData(bool, DataCfg_AppendType)	24	static
-../Core/Src/ADS7138.cpp:114:19:HAL_StatusTypeDef ADS7138::ConfigureOversampling(OsrCfg_Type)	24	static
-../Core/Src/ADS7138.cpp:128:19:HAL_StatusTypeDef ADS7138::ConfigureOpmode(bool, ConvMode_Type)	24	static
-../Core/Src/ADS7138.cpp:151:19:HAL_StatusTypeDef ADS7138::ConfigureOpmode(bool, ConvMode_Type, Osc_Type, uint8_t)	24	static
-../Core/Src/ADS7138.cpp:175:19:HAL_StatusTypeDef ADS7138::ConfigurePinMode(uint8_t)	16	static
-../Core/Src/ADS7138.cpp:186:19:HAL_StatusTypeDef ADS7138::ConfigureSequence(uint8_t)	16	static
-../Core/Src/ADS7138.cpp:196:19:HAL_StatusTypeDef ADS7138::ConfigureSequenceAll()	16	static
-../Core/Src/ADS7138.cpp:204:19:HAL_StatusTypeDef ADS7138::ConfigureSequenceMode(SeqMode_Type)	24	static
-../Core/Src/ADS7138.cpp:217:19:HAL_StatusTypeDef ADS7138::ManualSelectChannel(uint8_t)	16	static
-../Core/Src/ADS7138.cpp:227:19:HAL_StatusTypeDef ADS7138::StartConversion()	40	static
-../Core/Src/ADS7138.cpp:244:19:HAL_StatusTypeDef ADS7138::StartSequence()	16	static
-../Core/Src/ADS7138.cpp:251:19:HAL_StatusTypeDef ADS7138::StopSequence()	16	static
-../Core/Src/ADS7138.cpp:263:19:HAL_StatusTypeDef ADS7138::ConversionReadManual(uint16_t*, uint8_t)	40	static
-../Core/Src/ADS7138.cpp:300:19:HAL_StatusTypeDef ADS7138::ConversionReadAutoSequence(uint16_t*, uint8_t)	40	static
-../Core/Src/ADS7138.cpp:333:19:HAL_StatusTypeDef ADS7138::InitAutonomous(uint8_t)	24	static
-../Core/Src/ADS7138.cpp:357:19:HAL_StatusTypeDef ADS7138::ReadChannel(uint8_t, uint16_t*)	32	static
-../Core/Src/ADS7138.cpp:376:19:HAL_StatusTypeDef ADS7138::ReadReg(ADS7138_Register, uint8_t*)	40	static
-../Core/Src/ADS7138.cpp:391:19:HAL_StatusTypeDef ADS7138::WriteReg(ADS7138_Register, uint8_t)	32	static
-../Core/Src/ADS7138.cpp:409:19:HAL_StatusTypeDef ADS7138::SetRegBits(ADS7138_Register, uint8_t)	24	static
-../Core/Src/ADS7138.cpp:427:19:HAL_StatusTypeDef ADS7138::ClearRegBits(ADS7138_Register, uint8_t)	24	static
-../Core/Src/ADS7138.cpp:442:19:HAL_StatusTypeDef ADS7138::AutoSelectChannels(uint8_t)	16	static
+../Core/Src/ADS7138.cpp:6:1:ADS7138::ADS7138()	16	static
+../Core/Src/ADS7138.cpp:14:6:void ADS7138::begin(I2C_HandleTypeDef*, uint8_t)	24	static
+../Core/Src/ADS7138.cpp:22:6:void ADS7138::setReferenceVoltage(uint32_t)	16	static
+../Core/Src/ADS7138.cpp:26:6:void ADS7138::writeRegister8(uint8_t, uint8_t)	32	static
+../Core/Src/ADS7138.cpp:31:6:void ADS7138::configureOpMode(ADS7138__OSC_SEL, ADS7138__CONV_MODE, ADS7138__CONV_ON_ERR)	24	static
+../Core/Src/ADS7138.cpp:36:6:void ADS7138::configureSequenceMode(ADS7138__SEQ_MODE, ADS7138__SEQ_START)	24	static
+../Core/Src/ADS7138.cpp:41:6:void ADS7138::configureOsr(ADS7138__OSR)	16	static
+../Core/Src/ADS7138.cpp:46:6:void ADS7138::selectChannel(ADS7138__MANUAL_CHID)	16	static
+../Core/Src/ADS7138.cpp:51:10:uint16_t ADS7138::read()	32	static
+../Core/Src/ADS7138.cpp:64:10:uint16_t ADS7138::readChannel(ADS7138__MANUAL_CHID)	16	static
+../Core/Src/ADS7138.cpp:71:10:uint32_t ADS7138::readVoltage()	24	static
+../Core/Src/ADS7138.cpp:76:10:uint32_t ADS7138::readChannelVoltage(ADS7138__MANUAL_CHID)	16	static

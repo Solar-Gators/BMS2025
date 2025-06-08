@@ -26,7 +26,7 @@ HAL_StatusTypeDef BQChips::readVoltages(){
 	for (int i = 0; i < 16; i++){
 		cellVoltages[i] = pChip1 -> cell_voltages_[i];
 	}
-	for (int j = 0; j < 13; j++){
+	for (int j = 0; j < 16; j++){
 		cellVoltages[j+16] = pChip2 -> cell_voltages_[j];
 	}
 
@@ -51,8 +51,8 @@ int16_t BQChips::getCellVoltage(int cellID){
 	return cellVoltages[cellID];
 }
 
-void BQChips::getAll29CellVoltages(int16_t arrData[]){
-	for (int i = 0; i < 29; i++){
+void BQChips::getAll32CellVoltages(int16_t arrData[]){
+	for (int i = 0; i < 32; i++){
 		arrData[i] = cellVoltages[i];
 	}
 }

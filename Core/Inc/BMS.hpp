@@ -1,0 +1,60 @@
+/*
+ * BMS.hpp
+ *
+ *  Created on: Apr 30, 2025
+ *      Author: samrb
+ */
+
+#include "main.h"
+
+#ifndef INC_BMS_HPP_
+#define INC_BMS_HPP_
+
+enum errorState{
+	noFault,
+	lowCellVoltage,
+	highCellVoltage,
+	overTempCharge,
+	overTempDischarge,
+	overCurrentCharge,
+	overCurrentDischarge
+};
+
+enum chargeState{
+	discharging,
+	charging
+};
+
+struct BMSData {
+
+	//voltage data
+	uint16_t highVoltage_mV;
+	uint16_t lowVoltage_mV;
+	uint16_t avgVoltage_mV;
+	uint32_t totalVoltage_mV;
+
+	uint8_t highVoltage_index;
+	uint8_t lowVoltage_index;
+
+	//temp data
+	float highTemp;
+	float lowTemp;
+	float avgTemp;
+
+	uint16_t highTemp_index;
+	uint16_t lowTemp_index;
+
+	//current data
+	float lowCurrent_A;
+	float highCurrent_A;
+
+	//arrays
+	uint16_t cellVoltages[32];
+	uint16_t cellTempatures[29];
+	float allTempatues[32];
+
+
+};
+
+#endif /* INC_BMS_HPP_ */
+
