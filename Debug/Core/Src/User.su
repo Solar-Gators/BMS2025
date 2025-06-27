@@ -1,19 +1,20 @@
 C:\ST\STM32CubeIDE_1.16.0\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.200.202406191623\tools\bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/include/c++/12.3.1/bits/std_abs.h:75:3:constexpr float std::abs(float)	16	static
-../Core/Src/User.cpp:75:6:void CPP_UserSetup()	16	static
-../Core/Src/User.cpp:136:6:void StartDefaultTask(void*)	16	static
-../Core/Src/User.cpp:150:6:void StartTask02(void*)	24	static
-../Core/Src/User.cpp:189:6:void StartTask03(void*)	96	static
-../Core/Src/User.cpp:247:6:void StartTask04(void*)	176	static
-../Core/Src/User.cpp:309:6:void StartTask05(void*)	80	static
-../Core/Src/User.cpp:354:6:void StartTask06(void*)	24	static
-../Core/Src/User.cpp:388:6:void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef*)	16	static
-../Core/Src/User.cpp:414:7:float ADCToCurrentL(uint32_t)	16	static
-../Core/Src/User.cpp:426:7:float ADCToCurrentH(uint32_t)	16	static
-../Core/Src/User.cpp:438:7:float ADCToTemperature(uint32_t)	24	static
-../Core/Src/User.cpp:449:7:float ADCToTemp(uint32_t)	16	static
-../Core/Src/User.cpp:462:6:void setUpCAN1(CAN_TxHeaderTypeDef, uint8_t*)	8	static
-../Core/Src/User.cpp:480:6:void setUpCAN2(CAN_TxHeaderTypeDef, uint8_t*)	16	static
-../Core/Src/User.cpp:497:6:void setUpCAN3(CAN_TxHeaderTypeDef, uint8_t*)	8	static
-../Core/Src/User.cpp:511:6:void send_bms_data(uint16_t*, float*, float)	224	static
-../Core/Src/User.cpp:523:1:void __static_initialization_and_destruction_0(int, int)	24	static
-../Core/Src/User.cpp:523:1:cpp)	8	static
+../Core/Inc/BMS.hpp:28:8:BMSData::BMSData()	16	static
+../Core/Src/User.cpp:84:6:void CPP_UserSetup()	16	static
+../Core/Src/User.cpp:142:6:void StartDefaultTask(void*)	16	static
+../Core/Src/User.cpp:156:6:void StartTask02(void*)	24	static
+../Core/Src/User.cpp:194:6:void StartTask03(void*)	96	static
+../Core/Src/User.cpp:254:6:void StartTask04(void*)	176	static
+../Core/Src/User.cpp:319:6:void StartTask05(void*)	80	static
+../Core/Src/User.cpp:364:6:void StartTask06(void*)	24	static
+../Core/Src/User.cpp:398:6:void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef*)	16	static
+../Core/Src/User.cpp:424:7:float ADCToCurrentL(uint32_t)	16	static
+../Core/Src/User.cpp:436:7:float ADCToCurrentH(uint32_t)	16	static
+../Core/Src/User.cpp:448:7:float ADCToTemperature(uint32_t)	24	static
+../Core/Src/User.cpp:459:7:float ADCToTemp(uint32_t)	16	static
+../Core/Src/User.cpp:472:6:void setUpCAN1(CAN_TxHeaderTypeDef, uint8_t*)	8	static
+../Core/Src/User.cpp:490:6:void setUpCAN2(CAN_TxHeaderTypeDef, uint8_t*)	16	static
+../Core/Src/User.cpp:507:6:void setUpCAN3(CAN_TxHeaderTypeDef, uint8_t*)	8	static
+../Core/Src/User.cpp:517:6:void send_bms_data(uint16_t*, float*, float)	32	static
+../Core/Src/User.cpp:529:1:void __static_initialization_and_destruction_0(int, int)	24	static
+../Core/Src/User.cpp:529:1:cpp)	8	static

@@ -21,4 +21,6 @@ float ADCToTemp(uint32_t adc_val);
 
 void send_bms_data(uint16_t* cell_voltages, float* temperatures, float current);
 
+
+
 #endif /* USER_HPP_ */

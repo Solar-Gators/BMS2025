@@ -6,62 +6,62 @@
 ../Core/Src/BQ76952.cpp:34:19:HAL_StatusTypeDef BQ76952::ConfigUpdate(bool)	24	static
 ../Core/Src/BQ76952.cpp:57:19:HAL_StatusTypeDef BQ76952::ConfigureVoltageRegs()	16	static
 ../Core/Src/BQ76952.cpp:61:19:HAL_StatusTypeDef BQ76952::ReadVoltages()	32	static
-../Core/Src/BQ76952.cpp:106:19:HAL_StatusTypeDef BQ76952::ReadCurrent()	24	static
-../Core/Src/BQ76952.cpp:120:19:HAL_StatusTypeDef BQ76952::ReadTemperatures()	32	static
-../Core/Src/BQ76952.cpp:159:19:HAL_StatusTypeDef BQ76952::ReadSafetyFaults()	24	static
-../Core/Src/BQ76952.cpp:177:19:HAL_StatusTypeDef BQ76952::ChangeBalancingStatus(bool, bool, bool, bool)	24	static
-../Core/Src/BQ76952.cpp:200:19:HAL_StatusTypeDef BQ76952::DisableBalancing()	24	static
-../Core/Src/BQ76952.cpp:204:19:HAL_StatusTypeDef BQ76952::SetManualBalancing(bool)	24	static
-../Core/Src/BQ76952.cpp:208:19:HAL_StatusTypeDef BQ76952::SetBalancingWhileSleeping(bool)	24	static
-../Core/Src/BQ76952.cpp:212:19:HAL_StatusTypeDef BQ76952::SetBalancingWhileRelaxing(bool)	24	static
-../Core/Src/BQ76952.cpp:216:19:HAL_StatusTypeDef BQ76952::SetBalancingWhileCharging(bool)	24	static
-../Core/Src/BQ76952.cpp:220:19:HAL_StatusTypeDef BQ76952::SetBalancingMinCellTemp(int8_t)	16	static
-../Core/Src/BQ76952.cpp:224:19:HAL_StatusTypeDef BQ76952::SetBalancingMaxCellTemp(int8_t)	16	static
-../Core/Src/BQ76952.cpp:228:19:HAL_StatusTypeDef BQ76952::SetBalancingMaxInternalTemp(int8_t)	16	static
-../Core/Src/BQ76952.cpp:232:19:HAL_StatusTypeDef BQ76952::SetBalancingInterval(uint8_t)	16	static
-../Core/Src/BQ76952.cpp:236:19:HAL_StatusTypeDef BQ76952::SetBalancingMaxCells(uint8_t)	16	static
-../Core/Src/BQ76952.cpp:240:19:HAL_StatusTypeDef BQ76952::SetBalancingMinCellVoltage(int16_t, BalancingType)	16	static
-../Core/Src/BQ76952.cpp:249:19:HAL_StatusTypeDef BQ76952::SetBalancingStartDeltaVoltage(int16_t, BalancingType)	16	static
-../Core/Src/BQ76952.cpp:258:19:HAL_StatusTypeDef BQ76952::SetBalancingStopDeltaVoltage(int16_t, BalancingType)	16	static
-../Core/Src/BQ76952.cpp:269:19:HAL_StatusTypeDef BQ76952::StartBalancingOnCells(uint16_t)	16	static
-../Core/Src/BQ76952.cpp:273:19:HAL_StatusTypeDef BQ76952::ClearManualBalancing()	16	static
-../Core/Src/BQ76952.cpp:277:19:HAL_StatusTypeDef BQ76952::Shutdown()	16	static
-../Core/Src/BQ76952.cpp:281:19:HAL_StatusTypeDef BQ76952::EnterDeepSleep()	24	static
-../Core/Src/BQ76952.cpp:294:19:HAL_StatusTypeDef BQ76952::ExitDeepSleep()	24	static
-../Core/Src/BQ76952.cpp:303:19:HAL_StatusTypeDef BQ76952::ModifySleepCurrentBoundary(int16_t)	24	static
-../Core/Src/BQ76952.cpp:311:9:int16_t BQ76952::GetPackCurrent()	16	static
-../Core/Src/BQ76952.cpp:315:9:int16_t BQ76952::GetCellVoltage(uint32_t)	16	static
-../Core/Src/BQ76952.cpp:323:9:int16_t BQ76952::GetPackVoltage()	16	static
-../Core/Src/BQ76952.cpp:327:9:int16_t BQ76952::GetStackVoltage()	16	static
-../Core/Src/BQ76952.cpp:331:9:int16_t BQ76952::GetAvgCellVoltage()	16	static
-../Core/Src/BQ76952.cpp:335:9:int16_t BQ76952::GetHighCellVoltage()	16	static
-../Core/Src/BQ76952.cpp:339:9:int16_t BQ76952::GetLowCellVoltage()	16	static
-../Core/Src/BQ76952.cpp:343:6:bool BQ76952::GetConfigUpdateStatus()	16	static
-../Core/Src/BQ76952.cpp:347:19:HAL_StatusTypeDef BQ76952::WriteBytes(uint8_t, const uint8_t*, size_t)	48	static
-../Core/Src/BQ76952.cpp:360:19:HAL_StatusTypeDef BQ76952::ReadBytes(uint8_t, uint8_t*, size_t)	32	static
-../Core/Src/BQ76952.cpp:366:19:HAL_StatusTypeDef BQ76952::DirectReadU2(uint8_t, uint16_t*)	32	static
-../Core/Src/BQ76952.cpp:379:19:HAL_StatusTypeDef BQ76952::DirectReadI2(uint8_t, int16_t*)	32	static
-../Core/Src/BQ76952.cpp:392:19:HAL_StatusTypeDef BQ76952::SubcmdRead(uint16_t, uint32_t*, size_t)	40	static
-../Core/Src/BQ76952.cpp:450:19:HAL_StatusTypeDef BQ76952::SubcmdReadU1(uint16_t, uint8_t*)	32	static
-../Core/Src/BQ76952.cpp:463:19:HAL_StatusTypeDef BQ76952::SubcmdReadU2(uint16_t, uint16_t*)	32	static
-../Core/Src/BQ76952.cpp:476:19:HAL_StatusTypeDef BQ76952::SubcmdReadU4(uint16_t, uint32_t*)	32	static
-../Core/Src/BQ76952.cpp:489:19:HAL_StatusTypeDef BQ76952::SubcmdReadI1(uint16_t, int8_t*)	32	static
-../Core/Src/BQ76952.cpp:502:19:HAL_StatusTypeDef BQ76952::SubcmdReadI2(uint16_t, int16_t*)	32	static
-../Core/Src/BQ76952.cpp:515:19:HAL_StatusTypeDef BQ76952::SubcmdReadI4(uint16_t, int32_t*)	32	static
-../Core/Src/BQ76952.cpp:528:19:HAL_StatusTypeDef BQ76952::SubcmdReadF4(uint16_t, float*)	32	static
-../Core/Src/BQ76952.cpp:539:19:HAL_StatusTypeDef BQ76952::SubcmdWrite(uint16_t, uint32_t, size_t)	48	static
-../Core/Src/BQ76952.cpp:573:19:HAL_StatusTypeDef BQ76952::SubcmdCmdOnly(uint16_t)	16	static
-../Core/Src/BQ76952.cpp:577:19:HAL_StatusTypeDef BQ76952::SubcmdCmdWriteU1(uint16_t, uint8_t)	16	static
-../Core/Src/BQ76952.cpp:581:19:HAL_StatusTypeDef BQ76952::SubcmdCmdWriteU2(uint16_t, uint16_t)	16	static
-../Core/Src/BQ76952.cpp:585:19:HAL_StatusTypeDef BQ76952::SubcmdCmdWriteU4(uint16_t, uint32_t)	24	static
-../Core/Src/BQ76952.cpp:589:19:HAL_StatusTypeDef BQ76952::SubcmdCmdWriteI1(uint16_t, int8_t)	16	static
-../Core/Src/BQ76952.cpp:593:19:HAL_StatusTypeDef BQ76952::SubcmdCmdWriteI2(uint16_t, int16_t)	16	static
-../Core/Src/BQ76952.cpp:597:19:HAL_StatusTypeDef BQ76952::SubcmdCmdWriteI4(uint16_t, int32_t)	24	static
-../Core/Src/BQ76952.cpp:601:19:HAL_StatusTypeDef BQ76952::SubcmdCmdWriteF4(uint16_t, float)	32	static
-../Core/Src/BQ76952.cpp:606:19:HAL_StatusTypeDef BQ76952::DatamemReadU1(uint16_t, uint8_t*)	32	static
-../Core/Src/BQ76952.cpp:617:19:HAL_StatusTypeDef BQ76952::DatamemWriteU1(uint16_t, uint8_t)	16	static
-../Core/Src/BQ76952.cpp:623:19:HAL_StatusTypeDef BQ76952::DatamemWriteU2(uint16_t, uint16_t)	16	static
-../Core/Src/BQ76952.cpp:629:19:HAL_StatusTypeDef BQ76952::DatamemWriteI1(uint16_t, int8_t)	16	static
-../Core/Src/BQ76952.cpp:635:19:HAL_StatusTypeDef BQ76952::DatamemWriteI2(uint16_t, int16_t)	16	static
-../Core/Src/BQ76952.cpp:641:19:HAL_StatusTypeDef BQ76952::DatamemWriteF4(uint16_t, float)	32	static
-../Core/Src/BQ76952.cpp:651:19:HAL_StatusTypeDef BQ76952::UpdateMode()	24	static
+../Core/Src/BQ76952.cpp:109:19:HAL_StatusTypeDef BQ76952::ReadCurrent()	24	static
+../Core/Src/BQ76952.cpp:123:19:HAL_StatusTypeDef BQ76952::ReadTemperatures()	32	static
+../Core/Src/BQ76952.cpp:162:19:HAL_StatusTypeDef BQ76952::ReadSafetyFaults()	24	static
+../Core/Src/BQ76952.cpp:180:19:HAL_StatusTypeDef BQ76952::ChangeBalancingStatus(bool, bool, bool, bool)	24	static
+../Core/Src/BQ76952.cpp:203:19:HAL_StatusTypeDef BQ76952::DisableBalancing()	24	static
+../Core/Src/BQ76952.cpp:207:19:HAL_StatusTypeDef BQ76952::SetManualBalancing(bool)	24	static
+../Core/Src/BQ76952.cpp:211:19:HAL_StatusTypeDef BQ76952::SetBalancingWhileSleeping(bool)	24	static
+../Core/Src/BQ76952.cpp:215:19:HAL_StatusTypeDef BQ76952::SetBalancingWhileRelaxing(bool)	24	static
+../Core/Src/BQ76952.cpp:219:19:HAL_StatusTypeDef BQ76952::SetBalancingWhileCharging(bool)	24	static
+../Core/Src/BQ76952.cpp:223:19:HAL_StatusTypeDef BQ76952::SetBalancingMinCellTemp(int8_t)	16	static
+../Core/Src/BQ76952.cpp:227:19:HAL_StatusTypeDef BQ76952::SetBalancingMaxCellTemp(int8_t)	16	static
+../Core/Src/BQ76952.cpp:231:19:HAL_StatusTypeDef BQ76952::SetBalancingMaxInternalTemp(int8_t)	16	static
+../Core/Src/BQ76952.cpp:235:19:HAL_StatusTypeDef BQ76952::SetBalancingInterval(uint8_t)	16	static
+../Core/Src/BQ76952.cpp:239:19:HAL_StatusTypeDef BQ76952::SetBalancingMaxCells(uint8_t)	16	static
+../Core/Src/BQ76952.cpp:243:19:HAL_StatusTypeDef BQ76952::SetBalancingMinCellVoltage(int16_t, BalancingType)	16	static
+../Core/Src/BQ76952.cpp:252:19:HAL_StatusTypeDef BQ76952::SetBalancingStartDeltaVoltage(int16_t, BalancingType)	16	static
+../Core/Src/BQ76952.cpp:261:19:HAL_StatusTypeDef BQ76952::SetBalancingStopDeltaVoltage(int16_t, BalancingType)	16	static
+../Core/Src/BQ76952.cpp:272:19:HAL_StatusTypeDef BQ76952::StartBalancingOnCells(uint16_t)	16	static
+../Core/Src/BQ76952.cpp:276:19:HAL_StatusTypeDef BQ76952::ClearManualBalancing()	16	static
+../Core/Src/BQ76952.cpp:280:19:HAL_StatusTypeDef BQ76952::Shutdown()	16	static
+../Core/Src/BQ76952.cpp:284:19:HAL_StatusTypeDef BQ76952::EnterDeepSleep()	24	static
+../Core/Src/BQ76952.cpp:297:19:HAL_StatusTypeDef BQ76952::ExitDeepSleep()	24	static
+../Core/Src/BQ76952.cpp:306:19:HAL_StatusTypeDef BQ76952::ModifySleepCurrentBoundary(int16_t)	24	static
+../Core/Src/BQ76952.cpp:314:9:int16_t BQ76952::GetPackCurrent()	16	static
+../Core/Src/BQ76952.cpp:318:9:int16_t BQ76952::GetCellVoltage(uint32_t)	16	static
+../Core/Src/BQ76952.cpp:326:9:int16_t BQ76952::GetPackVoltage()	16	static
+../Core/Src/BQ76952.cpp:330:9:int16_t BQ76952::GetStackVoltage()	16	static
+../Core/Src/BQ76952.cpp:334:9:int16_t BQ76952::GetAvgCellVoltage()	16	static
+../Core/Src/BQ76952.cpp:338:9:int16_t BQ76952::GetHighCellVoltage()	16	static
+../Core/Src/BQ76952.cpp:342:9:int16_t BQ76952::GetLowCellVoltage()	16	static
+../Core/Src/BQ76952.cpp:346:6:bool BQ76952::GetConfigUpdateStatus()	16	static
+../Core/Src/BQ76952.cpp:350:19:HAL_StatusTypeDef BQ76952::WriteBytes(uint8_t, const uint8_t*, size_t)	48	static
+../Core/Src/BQ76952.cpp:363:19:HAL_StatusTypeDef BQ76952::ReadBytes(uint8_t, uint8_t*, size_t)	32	static
+../Core/Src/BQ76952.cpp:369:19:HAL_StatusTypeDef BQ76952::DirectReadU2(uint8_t, uint16_t*)	32	static
+../Core/Src/BQ76952.cpp:382:19:HAL_StatusTypeDef BQ76952::DirectReadI2(uint8_t, int16_t*)	32	static
+../Core/Src/BQ76952.cpp:395:19:HAL_StatusTypeDef BQ76952::SubcmdRead(uint16_t, uint32_t*, size_t)	40	static
+../Core/Src/BQ76952.cpp:453:19:HAL_StatusTypeDef BQ76952::SubcmdReadU1(uint16_t, uint8_t*)	32	static
+../Core/Src/BQ76952.cpp:466:19:HAL_StatusTypeDef BQ76952::SubcmdReadU2(uint16_t, uint16_t*)	32	static
+../Core/Src/BQ76952.cpp:479:19:HAL_StatusTypeDef BQ76952::SubcmdReadU4(uint16_t, uint32_t*)	32	static
+../Core/Src/BQ76952.cpp:492:19:HAL_StatusTypeDef BQ76952::SubcmdReadI1(uint16_t, int8_t*)	32	static
+../Core/Src/BQ76952.cpp:505:19:HAL_StatusTypeDef BQ76952::SubcmdReadI2(uint16_t, int16_t*)	32	static
+../Core/Src/BQ76952.cpp:518:19:HAL_StatusTypeDef BQ76952::SubcmdReadI4(uint16_t, int32_t*)	32	static
+../Core/Src/BQ76952.cpp:531:19:HAL_StatusTypeDef BQ76952::SubcmdReadF4(uint16_t, float*)	32	static
+../Core/Src/BQ76952.cpp:542:19:HAL_StatusTypeDef BQ76952::SubcmdWrite(uint16_t, uint32_t, size_t)	48	static
+../Core/Src/BQ76952.cpp:576:19:HAL_StatusTypeDef BQ76952::SubcmdCmdOnly(uint16_t)	16	static
+../Core/Src/BQ76952.cpp:580:19:HAL_StatusTypeDef BQ76952::SubcmdCmdWriteU1(uint16_t, uint8_t)	16	static
+../Core/Src/BQ76952.cpp:584:19:HAL_StatusTypeDef BQ76952::SubcmdCmdWriteU2(uint16_t, uint16_t)	16	static
+../Core/Src/BQ76952.cpp:588:19:HAL_StatusTypeDef BQ76952::SubcmdCmdWriteU4(uint16_t, uint32_t)	24	static
+../Core/Src/BQ76952.cpp:592:19:HAL_StatusTypeDef BQ76952::SubcmdCmdWriteI1(uint16_t, int8_t)	16	static
+../Core/Src/BQ76952.cpp:596:19:HAL_StatusTypeDef BQ76952::SubcmdCmdWriteI2(uint16_t, int16_t)	16	static
+../Core/Src/BQ76952.cpp:600:19:HAL_StatusTypeDef BQ76952::SubcmdCmdWriteI4(uint16_t, int32_t)	24	static
+../Core/Src/BQ76952.cpp:604:19:HAL_StatusTypeDef BQ76952::SubcmdCmdWriteF4(uint16_t, float)	32	static
+../Core/Src/BQ76952.cpp:609:19:HAL_StatusTypeDef BQ76952::DatamemReadU1(uint16_t, uint8_t*)	32	static
+../Core/Src/BQ76952.cpp:620:19:HAL_StatusTypeDef BQ76952::DatamemWriteU1(uint16_t, uint8_t)	16	static
+../Core/Src/BQ76952.cpp:626:19:HAL_StatusTypeDef BQ76952::DatamemWriteU2(uint16_t, uint16_t)	16	static
+../Core/Src/BQ76952.cpp:632:19:HAL_StatusTypeDef BQ76952::DatamemWriteI1(uint16_t, int8_t)	16	static
+../Core/Src/BQ76952.cpp:638:19:HAL_StatusTypeDef BQ76952::DatamemWriteI2(uint16_t, int16_t)	16	static
+../Core/Src/BQ76952.cpp:644:19:HAL_StatusTypeDef BQ76952::DatamemWriteF4(uint16_t, float)	32	static
+../Core/Src/BQ76952.cpp:654:19:HAL_StatusTypeDef BQ76952::UpdateMode()	24	static

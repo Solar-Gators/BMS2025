@@ -20,8 +20,8 @@ HAL_StatusTypeDef BQChips::readVoltages(){
 	HAL_StatusTypeDef status = pChip1 -> ReadVoltages();
 	if (status != HAL_OK)	{return status;}
 
-//	status = pChip2 -> ReadVoltages();
-//	if (status != HAL_OK)	{return status;}
+	status = pChip2 -> ReadVoltages();
+	if (status != HAL_OK)	{return status;}
 
 	for (int i = 0; i < 16; i++){
 		cellVoltages[i] = pChip1 -> cell_voltages_[i];

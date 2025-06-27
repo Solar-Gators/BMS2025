@@ -52,9 +52,17 @@ struct BMSData {
 	uint16_t cellVoltages[32];
 	uint16_t cellTempatures[29];
 	float allTempatues[32];
+	bool tempExclusionList[32] = {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+	bool voltageExclusionList[32] = {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
 
 };
+
+typedef struct {
+    uint16_t voltages[32];    // 32 voltage readings
+    float temperatures[32];   // 32 temperature readings
+    float current;            // Current reading
+} BMS_Data_t;
 
 #endif /* INC_BMS_HPP_ */
 

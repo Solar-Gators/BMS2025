@@ -1,5 +1,5 @@
 ../Core/Src/BQChips.cpp:13:1:BQChips::BQChips(BQ76952*, BQ76952*)	1
-../Core/Src/BQChips.cpp:19:19:HAL_StatusTypeDef BQChips::readVoltages()	6
+../Core/Src/BQChips.cpp:19:19:HAL_StatusTypeDef BQChips::readVoltages()	7
 ../Core/Src/BQChips.cpp:50:9:int16_t BQChips::getCellVoltage(int)	1
 ../Core/Src/BQChips.cpp:54:6:void BQChips::getAll32CellVoltages(int16_t*)	2
 ../Core/Src/BQChips.cpp:60:9:int16_t BQChips::getTotalVoltage()	1
