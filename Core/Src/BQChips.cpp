@@ -4,7 +4,6 @@
  *
  */
 
-
 #ifndef BQCHIPS_
 #define BQCHIPS_
 
@@ -24,13 +23,11 @@ HAL_StatusTypeDef BQChips::readVoltages(){
 	if (status != HAL_OK)	{return status;}
 
 	for (int i = 0; i < 16; i++){
-		cellVoltages[i] = pChip1 -> cell_voltages_[i];
-	}
-	for (int j = 0; j < 13; j++){
-		cellVoltages[j+16] = pChip2 -> cell_voltages_[j];
+		cellVoltages[i] = pChip1->cell_voltages_[i];
+		cellVoltages[i+16] = pChip2->cell_voltages_[i];
 	}
 
-	totalVoltage = (pChip1 -> stack_voltage_) + (pChip2 -> stack_voltage_); // TODO: check that this shouldn't be pack_voltage
+	totalVoltage = (pChip1 -> stack_voltage_) + (pChip2 -> stack_voltage_); // check that this shouldn't be pack_voltage
 	averageVoltage = ((pChip1 -> avg_cell_voltage_) + (pChip2 -> avg_cell_voltage_))/2;
 
 	maxVoltage = pChip1 -> high_cell_voltage_;
@@ -39,20 +36,20 @@ HAL_StatusTypeDef BQChips::readVoltages(){
 	}
 
 	minVoltage = pChip1 -> low_cell_voltage_;
-		if (pChip2 -> low_cell_voltage_ < minVoltage){
-			minVoltage = pChip2 -> low_cell_voltage_;
-		}
+	if (pChip2 -> low_cell_voltage_ < minVoltage){
+		minVoltage = pChip2 -> low_cell_voltage_;
+	}
 
 	return status;
 }
 
 //voltages
-int16_t BQChips::getCellVoltage(BMSCellID cellID){
+int16_t BQChips::getCellVoltage(int cellID){
 	return cellVoltages[cellID];
 }
 
-void BQChips::getAll29CellVoltages(int16_t arrData[]){
-	for (int i = 0; i < 29; i++){
+void BQChips::getAll32CellVoltages(int16_t arrData[]){
+	for (int i = 0; i < 32; i++){
 		arrData[i] = cellVoltages[i];
 	}
 }
@@ -69,8 +66,5 @@ int16_t BQChips::getMaxVoltage(){
 int16_t BQChips::getMinVoltage(){
 	return minVoltage;
 }
-
-
-
 
 #endif

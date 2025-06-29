@@ -133,7 +133,6 @@ public:
     bool auto_bal_relax_enabled_	= false;
     bool auto_bal_sleep_enabled_	= false;
 
-
 };
 
 #endif  /* BQ76952_HPP_ */

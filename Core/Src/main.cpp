@@ -19,11 +19,13 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "cmsis_os.h"
-
+#include "usb_device.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "stdbool.h"
 #include "User.hpp"
+
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -52,8 +54,6 @@ I2C_HandleTypeDef hi2c4;
 TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
 
-HCD_HandleTypeDef hhcd_USB_OTG_FS;
-
 /* Definitions for defaultTask */
 osThreadId_t defaultTaskHandle;
 const osThreadAttr_t defaultTask_attributes = {
@@ -79,7 +79,7 @@ const osThreadAttr_t Temp_Monitoring_attributes = {
 osThreadId_t Current_MonitorHandle;
 const osThreadAttr_t Current_Monitor_attributes = {
   .name = "Current_Monitor",
-  .stack_size = 128 * 4,
+  .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
 /* Definitions for Battery_Data_Tr */
@@ -110,7 +110,7 @@ static void MX_I2C3_Init(void);
 static void MX_I2C4_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_TIM3_Init(void);
-static void MX_USB_OTG_FS_HCD_Init(void);
+
 void StartDefaultTask(void *argument);
 void StartTask02(void *argument);
 void StartTask03(void *argument);
@@ -167,10 +167,12 @@ int main(void)
   MX_I2C4_Init();
   MX_TIM2_Init();
   MX_TIM3_Init();
-  MX_USB_OTG_FS_HCD_Init();
-  /* USER CODE BEGIN 2 */
-  HAL_CAN_Start(&hcan1);
 
+
+  /* USER CODE BEGIN 2 */
+  MX_USB_DEVICE_Init();
+
+  HAL_CAN_Start(&hcan1);
 
 
 
@@ -272,15 +274,11 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
-  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLM = 1;
-  RCC_OscInitStruct.PLL.PLLN = 8;
-  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-  RCC_OscInitStruct.PLL.PLLQ = RCC_PLLQ_DIV2;
-  RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV2;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI48|RCC_OSCILLATORTYPE_HSI;
+  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+  RCC_OscInitStruct.HSI48State = RCC_HSI48_ON;
+  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();
@@ -290,12 +288,12 @@ void SystemClock_Config(void)
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV16;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV8;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_3) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
   {
     Error_Handler();
   }
@@ -317,7 +315,7 @@ static void MX_CAN1_Init(void)
 
   /* USER CODE END CAN1_Init 1 */
   hcan1.Instance = CAN1;
-  hcan1.Init.Prescaler = 2;
+  hcan1.Init.Prescaler = 1;
   hcan1.Init.Mode = CAN_MODE_NORMAL;
   hcan1.Init.SyncJumpWidth = CAN_SJW_1TQ;
   hcan1.Init.TimeSeg1 = CAN_BS1_2TQ;
@@ -333,22 +331,6 @@ static void MX_CAN1_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN CAN1_Init 2 */
-
-  CAN_FilterTypeDef sFilterConfig;
-
-  sFilterConfig.FilterBank = 0;
-  sFilterConfig.FilterMode = CAN_FILTERMODE_IDMASK;
-  sFilterConfig.FilterScale = CAN_FILTERSCALE_32BIT;
-  sFilterConfig.FilterIdHigh = 0x0000;
-  sFilterConfig.FilterIdLow = 0x0000;
-  sFilterConfig.FilterMaskIdHigh = 0x0000;
-  sFilterConfig.FilterMaskIdLow = 0x0000;
-  sFilterConfig.FilterFIFOAssignment = CAN_RX_FIFO0;
-  sFilterConfig.FilterActivation = ENABLE;
-  sFilterConfig.SlaveStartFilterBank = 14;
-
-  HAL_CAN_ConfigFilter(&hcan1, &sFilterConfig);
-
 
   /* USER CODE END CAN1_Init 2 */
 
@@ -370,10 +352,10 @@ static void MX_CAN2_Init(void)
 
   /* USER CODE END CAN2_Init 1 */
   hcan2.Instance = CAN2;
-  hcan2.Init.Prescaler = 10;
+  hcan2.Init.Prescaler = 1;
   hcan2.Init.Mode = CAN_MODE_NORMAL;
   hcan2.Init.SyncJumpWidth = CAN_SJW_1TQ;
-  hcan2.Init.TimeSeg1 = CAN_BS1_14TQ;
+  hcan2.Init.TimeSeg1 = CAN_BS1_2TQ;
   hcan2.Init.TimeSeg2 = CAN_BS2_1TQ;
   hcan2.Init.TimeTriggeredMode = DISABLE;
   hcan2.Init.AutoBusOff = DISABLE;
@@ -390,7 +372,6 @@ static void MX_CAN2_Init(void)
   /* USER CODE END CAN2_Init 2 */
 
 }
-
 /**
   * @brief I2C2 Initialization Function
   * @param None
@@ -554,9 +535,9 @@ static void MX_TIM2_Init(void)
 
   /* USER CODE END TIM2_Init 1 */
   htim2.Instance = TIM2;
-  htim2.Init.Prescaler = 0;
+  htim2.Init.Prescaler = 4-1;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 4294967295;
+  htim2.Init.Period = 40-1;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_PWM_Init(&htim2) != HAL_OK)
@@ -603,9 +584,9 @@ static void MX_TIM3_Init(void)
 
   /* USER CODE END TIM3_Init 1 */
   htim3.Instance = TIM3;
-  htim3.Init.Prescaler = 0;
+  htim3.Init.Prescaler = 4-1;
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim3.Init.Period = 65535;
+  htim3.Init.Period = 40-1;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_PWM_Init(&htim3) != HAL_OK)
@@ -633,36 +614,7 @@ static void MX_TIM3_Init(void)
 
 }
 
-/**
-  * @brief USB_OTG_FS Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_USB_OTG_FS_HCD_Init(void)
-{
 
-  /* USER CODE BEGIN USB_OTG_FS_Init 0 */
-
-  /* USER CODE END USB_OTG_FS_Init 0 */
-
-  /* USER CODE BEGIN USB_OTG_FS_Init 1 */
-
-  /* USER CODE END USB_OTG_FS_Init 1 */
-  hhcd_USB_OTG_FS.Instance = USB_OTG_FS;
-  hhcd_USB_OTG_FS.Init.Host_channels = 12;
-  hhcd_USB_OTG_FS.Init.speed = HCD_SPEED_FULL;
-  hhcd_USB_OTG_FS.Init.dma_enable = DISABLE;
-  hhcd_USB_OTG_FS.Init.phy_itface = HCD_PHY_EMBEDDED;
-  hhcd_USB_OTG_FS.Init.Sof_enable = DISABLE;
-  if (HAL_HCD_Init(&hhcd_USB_OTG_FS) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN USB_OTG_FS_Init 2 */
-
-  /* USER CODE END USB_OTG_FS_Init 2 */
-
-}
 
 /**
   * @brief GPIO Initialization Function
