@@ -211,8 +211,13 @@ void StartTask03(void *argument)
         bqChips.readVoltages();
         bqChips.getAll32CellVoltages(cellVoltages);
 
-        for(int i = 0; i < 29; i++) {
+
+        for(int i = 0; i < 32; i++) {
             // Skip if cell is excluded from voltage monitoring
+        	if(BMS.voltageExclusionList[i] == 0){
+        		continue;
+        	}
+
 
 
             BMS.cellVoltages[i] = bqChips.getCellVoltage(i);
@@ -272,7 +277,9 @@ void StartTask04(void *argument)
             for (uint8_t ch = 0; ch < 8; ch++) {
                 uint8_t sensor_index = i*8 + ch;
 
-
+                if(BMS.tempExclusionList[i] == 0){
+                	continue;
+                }
 
 
                 if(hi2c2.State == HAL_I2C_STATE_READY) {
@@ -332,8 +339,6 @@ void StartTask05(void *argument)
   for(;;)
   {
 
-
-
 	  TxData[0] = fb.bytes[0];
 	  TxData[1] = fb.bytes[1];
 	  TxData[2] = fb.bytes[2];
@@ -369,7 +374,7 @@ void StartTask06(void *argument)
   {
 
 	  //control contactors
-	  if((debug == true || faultCondition == noFault) && shutdown == false){
+	  if(debug == true ||((faultCondition == noFault) && (shutdown == false))){
 
 		  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
 		  HAL_Delay(500);
