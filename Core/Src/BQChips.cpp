@@ -4,7 +4,6 @@
  *
  */
 
-
 #ifndef BQCHIPS_
 #define BQCHIPS_
 
@@ -24,10 +23,8 @@ HAL_StatusTypeDef BQChips::readVoltages(){
 	if (status != HAL_OK)	{return status;}
 
 	for (int i = 0; i < 16; i++){
-		cellVoltages[i] = pChip1 -> cell_voltages_[i];
-	}
-	for (int j = 0; j < 16; j++){
-		cellVoltages[j+16] = pChip2 -> cell_voltages_[j];
+		cellVoltages[i] = pChip1->cell_voltages_[i];
+		cellVoltages[i+16] = pChip2->cell_voltages_[i];
 	}
 
 	totalVoltage = (pChip1 -> stack_voltage_) + (pChip2 -> stack_voltage_); // check that this shouldn't be pack_voltage
@@ -39,9 +36,9 @@ HAL_StatusTypeDef BQChips::readVoltages(){
 	}
 
 	minVoltage = pChip1 -> low_cell_voltage_;
-		if (pChip2 -> low_cell_voltage_ < minVoltage){
-			minVoltage = pChip2 -> low_cell_voltage_;
-		}
+	if (pChip2 -> low_cell_voltage_ < minVoltage){
+		minVoltage = pChip2 -> low_cell_voltage_;
+	}
 
 	return status;
 }
@@ -69,8 +66,5 @@ int16_t BQChips::getMaxVoltage(){
 int16_t BQChips::getMinVoltage(){
 	return minVoltage;
 }
-
-
-
 
 #endif

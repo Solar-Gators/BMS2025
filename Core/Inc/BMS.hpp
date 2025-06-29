@@ -33,16 +33,16 @@ struct BMSData {
 	uint16_t avgVoltage_mV;
 	uint32_t totalVoltage_mV;
 
-	uint8_t highVoltage_index;
-	uint8_t lowVoltage_index;
+	uint8_t highVoltageIndex;
+	uint8_t lowVoltageIndex;
 
 	//temp data
 	float highTemp;
 	float lowTemp;
 	float avgTemp;
 
-	uint16_t highTemp_index;
-	uint16_t lowTemp_index;
+	uint16_t highTempIndex;
+	uint16_t lowTempIndex;
 
 	//current data
 	float lowCurrent_A;
@@ -51,10 +51,9 @@ struct BMSData {
 	//arrays
 	uint16_t cellVoltages[32];
 	uint16_t cellTempatures[29];
-	float allTempatues[32];
+	float allTemperatures[32];
 	bool tempExclusionList[32] = {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 	bool voltageExclusionList[32] = {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-
 
 };
 

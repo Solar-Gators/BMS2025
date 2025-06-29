@@ -37,7 +37,7 @@ bool VT = 0;
 
 uint8_t faultCondition;
 uint8_t currentDirrection;
-uint8_t fanSpeedPrecentage;
+uint8_t fanSpeedPercentage;
 
 uint16_t current_adc_vals[8];
 
@@ -70,13 +70,10 @@ union uint32Bytes numBytes;
 char buffer[512];  // Make sure this is large enough for your data
 int pos = 0;
 
-
-// Add with other global structs
 typedef struct {
     uint32_t voltage_exclusions;   // 32 bits for voltage exclusions
     uint32_t temp_exclusions;      // 32 bits for temperature exclusions
 } Exclusion_Data_t;
-
 
 
 void CPP_UserSetup(void) {
@@ -103,10 +100,12 @@ void CPP_UserSetup(void) {
 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_2, GPIO_PIN_RESET);
 
 	//initalize BMS ICs
-	HAL_StatusTypeDef status;
-	status = bqChip2.Init(&hi2c4, bqChipI2CAddress);
-	status = bqChip1.Init(&hi2c3, bqChipI2CAddress);
-
+	if (HAL_StatusTypeDef::HAL_OK != bqChip2.Init(&hi2c4, bqChipI2CAddress)) {
+		Error_Handler();
+	}
+	if (HAL_StatusTypeDef::HAL_OK != bqChip1.Init(&hi2c3, bqChipI2CAddress)) {
+		Error_Handler();
+	}
 
 	//initalize current ADC
 	current_adc.begin(&hi2c2, 0x10); // Default address: 0x10
@@ -130,15 +129,13 @@ void CPP_UserSetup(void) {
 
     HAL_TIM_Base_Start(&htim2);
     HAL_TIM_Base_Start(&htim3);
-    HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
 
+    HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
     HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
 
 }
 
-
-void StartDefaultTask(void *argument)
-{
+void StartDefaultTask(void *argument) {
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
   for(;;)
@@ -151,58 +148,50 @@ void StartDefaultTask(void *argument)
 }
 
 // CURRENT MONITORING TASK
-void StartTask02(void *argument)
-{
+void StartTask02(void *argument) {
 
 	uint32_t rawData;
-	floaebug/BMS2025.elf
-    Debug/BMS2025.list
-t low;
+	float low;
 
 	for (;;)
 	{
 
-		if(hi2c2.State == HAL_I2C_STATE_READY){
+		if (hi2c2.State == HAL_I2C_STATE_READY) {
 
 			rawData = current_adc.readChannelVoltage((ADS7138__MANUAL_CHID)(MANUAL_CHID_AIN0));
 			low  = ADCToCurrentL(rawData);
 
-			if(abs(low) == low){
+			if (abs(low) == low) {
 				currentDirrection = discharging;
-				if(low > 26){
+				if (low > 26) {
 					faultCondition = overCurrentCharge;
-
 				}
-			}else{
+			} else {
 				currentDirrection = charging;
-				if(abs(low) > 60){
+				if (abs(low) > 60) {
 					faultCondition = overCurrentDischarge;
-
 				}
-
 			}
 		}
+
 		BMS.lowCurrent_A = low;
 		fb.value = low;
 
-
 		osDelay(50);
 	}
-
 }
+
 // VOLTAGE MONITORING TASK
-void StartTask03(void *argument)
-{
+void StartTask03(void *argument) {
     int16_t cellVoltages[32] = {0};
     uint16_t highestCell = 0;
     uint16_t lowestCell = 10000;
-    BMS.highVoltage_index = 0;
-    BMS.lowVoltage_index = 0;
+    BMS.highVoltageIndex = 0;
+    BMS.lowVoltageIndex = 0;
     uint32_t total = 0;
     uint8_t active_cell_count = 0;  // Count of non-excluded cells
 
-    for(;;)
-    {
+    for(;;) {
         total = 0;
         highestCell = 0;
         lowestCell = 10000;
@@ -211,31 +200,30 @@ void StartTask03(void *argument)
         bqChips.readVoltages();
         bqChips.getAll32CellVoltages(cellVoltages);
 
-
-        for(int i = 0; i < 32; i++) {
+        for (int i = 0; i < 32; i++) {
             // Skip if cell is excluded from voltage monitoring
-        	if(BMS.voltageExclusionList[i] == 0){
+        	if (BMS.voltageExclusionList[i] == 0) {
         		continue;
         	}
 
-
-
             BMS.cellVoltages[i] = bqChips.getCellVoltage(i);
 
-            if(BMS.cellVoltages[i] > highestCell) {
+            if (BMS.cellVoltages[i] > highestCell) {
                 highestCell = BMS.cellVoltages[i];
-                BMS.highVoltage_index = i;
+                BMS.highVoltageIndex = i;
             }
+
             if(BMS.cellVoltages[i] < lowestCell) {
                 lowestCell = BMS.cellVoltages[i];
-                BMS.lowVoltage_index = i;
+                BMS.lowVoltageIndex = i;
             }
+
             total += BMS.cellVoltages[i];
             active_cell_count++;
         }
 
         // Only calculate average if we have active cells
-        if(active_cell_count > 0) {
+        if (active_cell_count > 0) {
             BMS.totalVoltage_mV = total;
             BMS.avgVoltage_mV = (uint16_t)(total/active_cell_count);
             BMS.lowVoltage_mV = lowestCell;
@@ -244,10 +232,10 @@ void StartTask03(void *argument)
             numBytes.value = total;
 
             // Only check voltage limits for non-excluded cells
-            if(lowestCell < 2500) {
+            if (lowestCell < 2500) {
                 faultCondition = lowCellVoltage;
             }
-            if(highestCell > 4200) {
+            if (highestCell > 4200) {
                 faultCondition = highCellVoltage;
             }
         }
@@ -255,19 +243,18 @@ void StartTask03(void *argument)
         osDelay(100);
     }
 }
+
 // TEMPERATURE MONITORING TASK
-void StartTask04(void *argument)
-{
+void StartTask04(void *argument) {
     uint32_t rawData[32];
     float highestCell = 0.0;
     float lowestCell = 1000.0;
-    BMS.highTemp_index = 0;
-    BMS.lowTemp_index = 0;
+    BMS.highTempIndex = 0;
+    BMS.lowTempIndex = 0;
     float total = 0;
     uint8_t active_temp_count = 0;  // Count of non-excluded temperature sensors
 
-    for(;;)
-    {
+    for(;;) {
         total = 0;
         highestCell = 0.0;
         lowestCell = 1000.0;
@@ -277,45 +264,47 @@ void StartTask04(void *argument)
             for (uint8_t ch = 0; ch < 8; ch++) {
                 uint8_t sensor_index = i*8 + ch;
 
-                if(BMS.tempExclusionList[i] == 0){
+                if (BMS.tempExclusionList[i] == 0) {
                 	continue;
                 }
 
-
-                if(hi2c2.State == HAL_I2C_STATE_READY) {
+                if (hi2c2.State == HAL_I2C_STATE_READY) {
                     rawData[sensor_index] = temp_adcs[i].readChannelVoltage((ADS7138__MANUAL_CHID)(MANUAL_CHID_AIN0 + ch));
-                    BMS.allTempatues[sensor_index] = ADCToTemp(rawData[sensor_index]);
+                    BMS.allTemperatures[sensor_index] = ADCToTemp(rawData[sensor_index]);
 
-                    if(BMS.allTempatues[sensor_index] > highestCell) {
-                        highestCell = BMS.allTempatues[sensor_index];
-                        BMS.highTemp_index = sensor_index;
+                    if (BMS.allTemperatures[sensor_index] > highestCell) {
+                        highestCell = BMS.allTemperatures[sensor_index];
+                        BMS.highTempIndex = sensor_index;
                     }
-                    if(BMS.allTempatues[sensor_index] < lowestCell) {
-                        lowestCell = BMS.allTempatues[sensor_index];
-                        BMS.lowTemp_index = sensor_index;
+                    if (BMS.allTemperatures[sensor_index] < lowestCell) {
+                        lowestCell = BMS.allTemperatures[sensor_index];
+                        BMS.lowTempIndex = sensor_index;
                     }
-                    total += BMS.allTempatues[sensor_index];
+                    total += BMS.allTemperatures[sensor_index];
                     active_temp_count++;
                 }
             }
         }
 
         // Only calculate average if we have active temperature sensors
-        if(active_temp_count > 0) {
-            BMS.avgTemp = total/active_temp_count;
-            BMS.lowTemp = lowestCell;
-            BMS.highTemp = highestCell;
+        if (0 >= active_temp_count) {
+            osDelay(1000);
+            continue;
+        }
 
-            // Only check temperature limits for non-excluded sensors
-            if(currentDirrection == charging) {
-                if(highestCell > 45) {
-                    faultCondition = overTempCharge;
-                }
+        BMS.avgTemp = total/active_temp_count;
+        BMS.lowTemp = lowestCell;
+        BMS.highTemp = highestCell;
+
+        // Only check temperature limits for non-excluded sensors
+        if (currentDirrection == charging) {
+            if (highestCell > 45) {
+                faultCondition = overTempCharge;
             }
-            if(currentDirrection == discharging) {
-                if(highestCell > 60) {
-                    faultCondition = overTempDischarge;
-                }
+        }
+        if (currentDirrection == discharging) {
+            if (highestCell > 60) {
+                faultCondition = overTempDischarge;
             }
         }
 
@@ -323,104 +312,83 @@ void StartTask04(void *argument)
     }
 }
 
-void StartTask05(void *argument)
-{
+void StartTask05(void *argument) {
 
-  //setup CAN TX header
-  CAN_TxHeaderTypeDef TxHeader;
-  uint8_t TxData[8] = { 0 };
-  uint32_t TxMailbox = { 0 };
+    //setup CAN TX header
+    HAL_StatusTypeDef status;
+    CAN_TxHeaderTypeDef TxHeader;
+    uint8_t TxData[8] = { 0 };
+    uint32_t TxMailbox = { 0 };
 
+    /* Infinite loop */
+    for(;;) {
 
-  /* Infinite loop */
-  for(;;)
-  {
+        TxData[0] = fb.bytes[0];
+        TxData[1] = fb.bytes[1];
+        TxData[2] = fb.bytes[2];
+        TxData[3] = fb.bytes[3];
 
-	  TxData[0] = fb.bytes[0];
-	  TxData[1] = fb.bytes[1];
-	  TxData[2] = fb.bytes[2];
-	  TxData[3] = fb.bytes[3];
+        while (!HAL_CAN_GetTxMailboxesFreeLevel(&hcan1));
 
-	  while (!HAL_CAN_GetTxMailboxesFreeLevel(&hcan1));
-	  HAL_StatusTypeDef status;
-	  status = HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox);
-	  messages_sent++;
-	  if (status == HAL_ERROR)
-	  {
-		  Error_Handler();
-	  }
-	  else if (status == HAL_BUSY)
-	  {
-	  HAL_CAN_BUSY++;
-	  }
+        status = HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox);
+//        messages_sent++;
 
-	  //send_bms_data(BMS.cellVoltages, BMS.allTempatues, BMS.lowCurrent_A);
+        if (status == HAL_ERROR) {
+            Error_Handler();
+        } //else if (status == HAL_BUSY) {
+//            HAL_CAN_BUSY++;
+//        }
 
-
-    osDelay(100);
-  }
-
-  /* USER CODE END StartTask05 */
+        osDelay(100);
+    }
 }
 
-void StartTask06(void *argument)
-{
-  /* USER CODE BEGIN StartTask06 */
-  /* Infinite loop */
-  for(;;)
-  {
+void StartTask06(void *argument) {
 
-	  //control contactors
-	  if(debug == true ||((faultCondition == noFault) && (shutdown == false))){
+    for(;;) {
 
-		  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
-		  HAL_Delay(500);
-		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_5, GPIO_PIN_RESET);
-	  }else{
+	    //control contactors
+	    if (debug == true || ((faultCondition == noFault) && (shutdown == false))) {
+            HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
+            HAL_Delay(500);
+            HAL_GPIO_WritePin(GPIOC, GPIO_PIN_5, GPIO_PIN_RESET);
+	    } else {
+            HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
+            HAL_Delay(500);
+            HAL_GPIO_WritePin(GPIOC, GPIO_PIN_5, GPIO_PIN_SET);
+	    }
 
-		  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
-		  HAL_Delay(500);
-		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_5, GPIO_PIN_SET);
-	  }
-	  fanSpeedPrecentage = 50;
-	  //set fan speeds
-	  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, fanSpeedPrecentage/2.5);
-	  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, fanSpeedPrecentage/2.5);
+        fanSpeedPercentage = 50;
+        //set fan speeds
+        __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, fanSpeedPercentage/2.5);
+        __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, fanSpeedPercentage/2.5);
 
-	  send_bms_data(BMS.cellVoltages, BMS.allTempatues, BMS.lowCurrent_A);
-
-
+        send_bms_data(BMS.cellVoltages, BMS.allTemperatures, BMS.lowCurrent_A);
 
       osDelay(100);
   }
-  /* USER CODE END StartTask06 */
 }
 
+void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1) {
+    if (HAL_CAN_GetRxMessage(hcan1, CAN_RX_FIFO0, &RxHeader, RxData) != HAL_OK) {
+        Error_Handler();
+    }
 
-void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1)
-{
-  if (HAL_CAN_GetRxMessage(hcan1, CAN_RX_FIFO0, &RxHeader, RxData) != HAL_OK)
-  {
-    Error_Handler();
-  }
+    if (RxHeader.StdId == 0x7FF) {
+        if (RxData[0] == 1){
+            //byte 1
+            //ignition switch
+            if ((RxData[1] & 0x80) != 0x00) {
+                shutdown = true;
+            }
 
-  if (RxHeader.StdId == 0x7FF){
-	  if(RxData[0] == 1){
-		  //byte 1
-		  //ignition switch
-		  if((RxData[1] & 0x80) != 0x00){
-			  shutdown = true;
-		  }
-
-		  if((RxData[1] & 0x08) != 0x00){
-			  debug = true;
-		  }else{
-			  debug = false;
-		  }
-
-
-	  }
-  }
+            if ((RxData[1] & 0x08) != 0x00) {
+                debug = true;
+            } else{
+                debug = false;
+            }
+        }
+    }
 }
 
 float ADCToCurrentL(uint32_t adc_val) {
@@ -502,8 +470,8 @@ void setUpCAN2(CAN_TxHeaderTypeDef Header, uint8_t* data){
 
 	data[4] = (uint8_t)(BMS.highTemp * 1000.0f + 0.5f);
 	data[5] = ((uint16_t)(BMS.highTemp * 1000.0f + 0.5f)) >> 8;
-	data[6] = BMS.lowVoltage_index;
-	data[7] = BMS.highTemp_index;
+	data[6] = BMS.lowVoltageIndex;
+	data[7] = BMS.highTempIndex;
 }
 
 void setUpCAN3(CAN_TxHeaderTypeDef Header, uint8_t* data){
