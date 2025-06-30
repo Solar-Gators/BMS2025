@@ -20,9 +20,9 @@ float ADCToCurrentH(uint32_t adc_val);
 float ADCToTemp(uint32_t adc_val);
 
 void send_bms_data(uint16_t* cell_voltages, float* temperatures, float current);
-void setUpCAN1(CAN_TxHeaderTypeDef Header, uint8_t* data);
-void setUpCAN2(CAN_TxHeaderTypeDef Header, uint8_t* data);
-void setUpCAN3(CAN_TxHeaderTypeDef Header, uint8_t* data);
+void setUpCAN1(CAN_TxHeaderTypeDef &Header, uint8_t* data);
+void setUpCAN2(CAN_TxHeaderTypeDef &Header, uint8_t* data);
+void setUpCAN3(CAN_TxHeaderTypeDef &Header, uint8_t* data);
 
 
 

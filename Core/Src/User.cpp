@@ -102,12 +102,12 @@ void CPP_UserSetup(void) {
 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_2, GPIO_PIN_RESET);
 
 	//initalize BMS ICs
-	if (HAL_StatusTypeDef::HAL_OK != bqChip2.Init(&hi2c4, bqChipI2CAddress)) {
-		Error_Handler();
-	}
-	if (HAL_StatusTypeDef::HAL_OK != bqChip1.Init(&hi2c3, bqChipI2CAddress)) {
-		Error_Handler();
-	}
+//	if (HAL_StatusTypeDef::HAL_OK != bqChip2.Init(&hi2c4, bqChipI2CAddress)) {
+//		Error_Handler();
+//	}
+//	if (HAL_StatusTypeDef::HAL_OK != bqChip1.Init(&hi2c3, bqChipI2CAddress)) {
+//		Error_Handler();
+//	}
 
 	//initalize current ADC
 	current_adc.begin(&hi2c2, 0x10); // Default address: 0x10
@@ -364,7 +364,12 @@ void StartTask06(void *argument) {
     for(;;) {
 
 	    //control contactors
-	    if (openContactorsDebug == true || ((faultCondition == noFault) && (shutdown == false))) {
+    	if (shutdown) {
+    		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
+			HAL_Delay(500); // ? May replace later
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_5, GPIO_PIN_SET);
+			closed = false;
+    	} else if (openContactorsDebug == true || ((faultCondition == noFault) && (shutdown == false))) {
             HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
             HAL_Delay(500); // ? May replace later
             HAL_GPIO_WritePin(GPIOC, GPIO_PIN_5, GPIO_PIN_RESET);
@@ -458,7 +463,7 @@ float ADCToTemp(uint32_t adc_val) {
 
 
 
-void setUpCAN1(CAN_TxHeaderTypeDef Header, uint8_t* data){
+void setUpCAN1(CAN_TxHeaderTypeDef &Header, uint8_t* data){
 	Header.IDE = CAN_ID_STD; // Standard ID (not extended)
 	Header.StdId = 0x4; // 11 bit Identifier
 	Header.RTR = CAN_RTR_DATA; // Std RTR Data frame
@@ -476,7 +481,7 @@ void setUpCAN1(CAN_TxHeaderTypeDef Header, uint8_t* data){
 
 }
 
-void setUpCAN2(CAN_TxHeaderTypeDef Header, uint8_t* data){
+void setUpCAN2(CAN_TxHeaderTypeDef &Header, uint8_t* data){
 	Header.IDE = CAN_ID_STD; // Standard ID (not extended)
 	Header.StdId = 0x5; // 11 bit Identifier
 	Header.RTR = CAN_RTR_DATA; // Std RTR Data frame
@@ -493,7 +498,7 @@ void setUpCAN2(CAN_TxHeaderTypeDef Header, uint8_t* data){
 	data[7] = BMS.highTempIndex;
 }
 
-void setUpCAN3(CAN_TxHeaderTypeDef Header, uint8_t* data){
+void setUpCAN3(CAN_TxHeaderTypeDef &Header, uint8_t* data){
 	Header.IDE = CAN_ID_STD; // Standard ID (not extended)
 	Header.StdId = 0x6; // 11 bit Identifier
 	Header.RTR = CAN_RTR_DATA; // Std RTR Data frame
