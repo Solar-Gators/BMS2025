@@ -30,7 +30,7 @@ uint8_t RxData[8];  // Array to store the received data
 
 
 //gloabal variables
-bool debug;
+bool openContactorsDebug;
 bool shutdown;
 bool closed;
 
@@ -81,7 +81,7 @@ void CPP_UserSetup(void) {
     // Make sure that timer priorities are configured correctly
     HAL_Delay(10);
 
-    debug = false;
+    openContactorsDebug = false;
     closed = false;
 
     //set contactor pins low
@@ -364,7 +364,7 @@ void StartTask06(void *argument) {
     for(;;) {
 
 	    //control contactors
-	    if (debug == true || ((faultCondition == noFault) && (shutdown == false))) {
+	    if (openContactorsDebug == true || ((faultCondition == noFault) && (shutdown == false))) {
             HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
             HAL_Delay(500); // ? May replace later
             HAL_GPIO_WritePin(GPIOC, GPIO_PIN_5, GPIO_PIN_RESET);
@@ -392,23 +392,21 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1) {
         Error_Handler();
     }
 
-    if (0x7FF != RxHeader.StdId) {
-    	return;
+    if (0x7FF == RxHeader.StdId) {
+    	if ((RxData[1] & 0x08) != 0x00) {
+			openContactorsDebug = true;
+		} else {
+			openContactorsDebug = false;
+		}
     }
 
-	if (1 == RxData[0]){
-		//byte 1
-		//ignition switch
-		if ((RxData[1] & 0x80) != 0x00) {
-			shutdown = true;
-		}
-
-		if ((RxData[1] & 0x08) != 0x00) {
-			debug = true;
-		} else{
-			debug = false;
-		}
-	}
+    if (0x7 == RxHeader.StdId) {
+    	if (RxData[1] & (1 << 4)) {
+    		shutdown = true;
+    	} else {
+    		shutdown = false;
+    	}
+    }
 
 }
 
