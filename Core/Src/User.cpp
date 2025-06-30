@@ -32,10 +32,11 @@ uint8_t RxData[8];  // Array to store the received data
 //gloabal variables
 bool debug;
 bool shutdown;
+bool closed;
 
 bool VT = 0;
 
-uint8_t faultCondition;
+errorState faultCondition = noFault;
 uint8_t currentDirrection;
 uint8_t fanSpeedPercentage;
 
@@ -81,6 +82,7 @@ void CPP_UserSetup(void) {
     HAL_Delay(10);
 
     debug = false;
+    closed = false;
 
     //set contactor pins low
     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
@@ -161,12 +163,13 @@ void StartTask02(void *argument) {
 			rawData = current_adc.readChannelVoltage((ADS7138__MANUAL_CHID)(MANUAL_CHID_AIN0));
 			low  = ADCToCurrentL(rawData);
 
+			// If positive current, discharging
 			if (abs(low) == low) {
 				currentDirrection = discharging;
 				if (low > 26) {
 					faultCondition = overCurrentCharge;
 				}
-			} else {
+			} else { // Else current will be negative, thus charging
 				currentDirrection = charging;
 				if (abs(low) > 60) {
 					faultCondition = overCurrentDischarge;
@@ -323,21 +326,34 @@ void StartTask05(void *argument) {
     /* Infinite loop */
     for(;;) {
 
-        TxData[0] = fb.bytes[0];
-        TxData[1] = fb.bytes[1];
-        TxData[2] = fb.bytes[2];
-        TxData[3] = fb.bytes[3];
+//        TxData[0] = fb.bytes[0];
+//        TxData[1] = fb.bytes[1];
+//        TxData[2] = fb.bytes[2];
+//        TxData[3] = fb.bytes[3];
+
+    	setUpCAN1(TxHeader, TxData);
 
         while (!HAL_CAN_GetTxMailboxesFreeLevel(&hcan1));
-
         status = HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox);
-//        messages_sent++;
-
         if (status == HAL_ERROR) {
             Error_Handler();
-        } //else if (status == HAL_BUSY) {
-//            HAL_CAN_BUSY++;
-//        }
+        }
+
+        setUpCAN2(TxHeader, TxData);
+
+		while (!HAL_CAN_GetTxMailboxesFreeLevel(&hcan1));
+		status = HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox);
+		if (status == HAL_ERROR) {
+			Error_Handler();
+		}
+
+		setUpCAN3(TxHeader, TxData);
+
+		while (!HAL_CAN_GetTxMailboxesFreeLevel(&hcan1));
+		status = HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox);
+		if (status == HAL_ERROR) {
+			Error_Handler();
+		}
 
         osDelay(100);
     }
@@ -350,12 +366,14 @@ void StartTask06(void *argument) {
 	    //control contactors
 	    if (debug == true || ((faultCondition == noFault) && (shutdown == false))) {
             HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
-            HAL_Delay(500);
+            HAL_Delay(500); // ? May replace later
             HAL_GPIO_WritePin(GPIOC, GPIO_PIN_5, GPIO_PIN_RESET);
+            closed = true;
 	    } else {
             HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
-            HAL_Delay(500);
+            HAL_Delay(500); // ? May replace later
             HAL_GPIO_WritePin(GPIOC, GPIO_PIN_5, GPIO_PIN_SET);
+            closed = false;
 	    }
 
         fanSpeedPercentage = 50;
@@ -374,21 +392,24 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1) {
         Error_Handler();
     }
 
-    if (RxHeader.StdId == 0x7FF) {
-        if (RxData[0] == 1){
-            //byte 1
-            //ignition switch
-            if ((RxData[1] & 0x80) != 0x00) {
-                shutdown = true;
-            }
-
-            if ((RxData[1] & 0x08) != 0x00) {
-                debug = true;
-            } else{
-                debug = false;
-            }
-        }
+    if (0x7FF != RxHeader.StdId) {
+    	return;
     }
+
+	if (1 == RxData[0]){
+		//byte 1
+		//ignition switch
+		if ((RxData[1] & 0x80) != 0x00) {
+			shutdown = true;
+		}
+
+		if ((RxData[1] & 0x08) != 0x00) {
+			debug = true;
+		} else{
+			debug = false;
+		}
+	}
+
 }
 
 float ADCToCurrentL(uint32_t adc_val) {
@@ -445,12 +466,12 @@ void setUpCAN1(CAN_TxHeaderTypeDef Header, uint8_t* data){
 	Header.RTR = CAN_RTR_DATA; // Std RTR Data frame
 	Header.DLC = 8; // 8 bytes being transmitted
 
-	data[0] = numBytes.bytes[0];
+	data[0] = numBytes.bytes[0]; // Voltage
 	data[1] = numBytes.bytes[1];
 	data[2] = numBytes.bytes[2];
 	data[3] = numBytes.bytes[3];
 
-	data[4] = fb.bytes[0];
+	data[4] = fb.bytes[0]; // Current
 	data[5] = fb.bytes[1];
 	data[6] = fb.bytes[2];
 	data[7] = fb.bytes[3];
@@ -463,10 +484,10 @@ void setUpCAN2(CAN_TxHeaderTypeDef Header, uint8_t* data){
 	Header.RTR = CAN_RTR_DATA; // Std RTR Data frame
 	Header.DLC = 8; // 8 bytes being transmitted
 
-	data[0] = (uint8_t)BMS.highVoltage_mV;
-	data[1] = (uint8_t)(BMS.highVoltage_mV >> 8);
-	data[2] = (uint8_t)BMS.lowVoltage_mV;
-	data[3] = (uint8_t)(BMS.lowVoltage_mV >> 8);
+	data[0] = (uint8_t)BMS.lowVoltage_mV;
+	data[1] = (uint8_t)(BMS.lowVoltage_mV >> 8);
+	data[2] = (uint8_t)BMS.highVoltage_mV;
+	data[3] = (uint8_t)(BMS.highVoltage_mV >> 8);
 
 	data[4] = (uint8_t)(BMS.highTemp * 1000.0f + 0.5f);
 	data[5] = ((uint16_t)(BMS.highTemp * 1000.0f + 0.5f)) >> 8;
@@ -481,7 +502,12 @@ void setUpCAN3(CAN_TxHeaderTypeDef Header, uint8_t* data){
 	Header.DLC = 8; // 8 bytes being transmitted
 
 	data[0] = faultCondition;
+	data[1] = 0;
+	data[2] = 0;
+	data[3] = 0;
 
+	data[4] = 0;
+	data[5] = closed;
 }
 
 void send_bms_data(uint16_t* cell_voltages, float* temperatures, float current) {
