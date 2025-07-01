@@ -61,23 +61,23 @@ HAL_StatusTypeDef BQ76952::ConfigureVoltageRegs() {
 HAL_StatusTypeDef BQ76952::ReadVoltages() {
     HAL_StatusTypeDef status = HAL_OK;
 
-    int16_t voltage_sum = 0;
+    int32_t voltage_sum = 0;
     low_cell_voltage_ = INT16_MAX;
     high_cell_voltage_ = INT16_MIN;
 
     for (int i = 0; i < 16; i++) {
 
-    	if((i == 0) || (i == 1) || (i == 15)){
-    		for (int retry = 0; retry < 3; retry++) {
+//    	if((i == 0) || (i == 1) || (i == 15)){
+    		for (int retry = 0; retry < 5; retry++) {
 				status = DirectReadI2(CELL_NO_TO_ADDR(i+1), &cell_voltages_[i]);
-				if (status == HAL_OK && cell_voltages_[i] < 5000 && cell_voltages_[i] > 1000) break;  // 1V to 5V is reasonable
+				if (status == HAL_OK && cell_voltages_[i] < 4200 && cell_voltages_[i] > 1000) break;  // 1V to 5V is reasonable
     		}
-    		if(cell_voltages_[i] > 5000 || cell_voltages_[i] < 1000){
-    			cell_voltages_[i] = 3600;
+    		if(cell_voltages_[i] < 0 || cell_voltages_[i] > 10000){
+    			cell_voltages_[i] = 3890;
     		}
-    	}else{
-    		status = DirectReadI2(CELL_NO_TO_ADDR(i+1), &cell_voltages_[i]);
-    	}
+//    	}else{
+    		//status = DirectReadI2(CELL_NO_TO_ADDR(i+1), &cell_voltages_[i]);
+//    	}
         if (status != HAL_OK) { return status; }
 
         if (cell_voltages_[i] > high_cell_voltage_) {

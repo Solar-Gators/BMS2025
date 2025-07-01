@@ -1,6 +1,6 @@
 ################################################################################
 # Automatically-generated file. Do not edit!
-# Toolchain: GNU Tools for STM32 (12.3.rel1)
+# Toolchain: GNU Tools for STM32 (13.3.rel1)
 ################################################################################
 
 -include ../makefile.init
@@ -92,8 +92,8 @@ all: main-build
 main-build: BMS2025.elf secondary-outputs
 
 # Tool invocations
-BMS2025.elf BMS2025.map: $(OBJS) $(USER_OBJS) C:\Users\samrb\STM32CubeIDE\workspace_1.16.0\BMS2025\STM32L496RGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-g++ -o "BMS2025.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\samrb\STM32CubeIDE\workspace_1.16.0\BMS2025\STM32L496RGTX_FLASH.ld" -Wl,-Map="BMS2025.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+BMS2025.elf BMS2025.map: $(OBJS) $(USER_OBJS) /home/jackb/Documents/UniversityofFlorida/SolarGators/stm32cubeide/BMS2025/STM32L496RGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-g++ -o "BMS2025.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/home/jackb/Documents/UniversityofFlorida/SolarGators/stm32cubeide/BMS2025/STM32L496RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="BMS2025.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
