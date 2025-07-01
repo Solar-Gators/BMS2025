@@ -102,12 +102,12 @@ void CPP_UserSetup(void) {
 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_2, GPIO_PIN_RESET);
 
 	//initalize BMS ICs
-	if (HAL_StatusTypeDef::HAL_OK != bqChip1.Init(&hi2c4, bqChipI2CAddress)) {
-		Error_Handler();
-	}
-	if (HAL_StatusTypeDef::HAL_OK != bqChip2.Init(&hi2c3, bqChipI2CAddress)) {
-		Error_Handler();
-	}
+//	if (HAL_StatusTypeDef::HAL_OK != bqChip1.Init(&hi2c4, bqChipI2CAddress)) {
+//		Error_Handler();
+//	}
+//	if (HAL_StatusTypeDef::HAL_OK != bqChip2.Init(&hi2c3, bqChipI2CAddress)) {
+//		Error_Handler();
+//	}
 
 	//initalize current ADC
 	current_adc.begin(&hi2c2, 0x10); // Default address: 0x10
@@ -267,9 +267,9 @@ void StartTask04(void *argument) {
             for (uint8_t ch = 0; ch < 8; ch++) {
                 uint8_t sensor_index = i*8 + ch;
 
-                if (BMS.tempExclusionList[i] == 0) {
-                	continue;
-                }
+//                if (BMS.tempExclusionList[i] == 0) {
+//                	continue;
+//                }
 
                 if (hi2c2.State == HAL_I2C_STATE_READY) {
                     rawData[sensor_index] = temp_adcs[i].readChannelVoltage((ADS7138__MANUAL_CHID)(MANUAL_CHID_AIN0 + ch));
@@ -294,6 +294,8 @@ void StartTask04(void *argument) {
             osDelay(1000);
             continue;
         }
+        // ~35000 == 45 degrees
+        // ~39500 == 60 degrees
 
         BMS.avgTemp = total/active_temp_count;
         BMS.lowTemp = lowestCell;
@@ -452,10 +454,10 @@ float ADCToTemperature(uint32_t adc_val) {
 
 float ADCToTemp(uint32_t adc_val) {
     // Constant slope for linear estimator
-    static constexpr float m = 1.0 / 1180;
+    static constexpr float m = 1.0 / 340.5;
 
     // Constant offset for linear estimator
-    static constexpr float b = 19000.0 / 1180;
+    static constexpr float b = -56.66;
 
     // Convert ADC value to temperature
     return (float)adc_val * m + b;
