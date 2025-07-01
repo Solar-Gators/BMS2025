@@ -52,8 +52,8 @@ struct BMSData {
 	uint16_t cellVoltages[32];
 	uint16_t cellTempatures[29];
 	float allTemperatures[32];
-	bool tempExclusionList[32] = {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-	bool voltageExclusionList[32] = {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+	bool tempExclusionList[32] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0};
+	bool voltageExclusionList[32] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0};
 
 };
 

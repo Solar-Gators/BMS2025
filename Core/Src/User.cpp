@@ -102,12 +102,12 @@ void CPP_UserSetup(void) {
 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_2, GPIO_PIN_RESET);
 
 	//initalize BMS ICs
-//	if (HAL_StatusTypeDef::HAL_OK != bqChip2.Init(&hi2c4, bqChipI2CAddress)) {
-//		Error_Handler();
-//	}
-//	if (HAL_StatusTypeDef::HAL_OK != bqChip1.Init(&hi2c3, bqChipI2CAddress)) {
-//		Error_Handler();
-//	}
+	if (HAL_StatusTypeDef::HAL_OK != bqChip1.Init(&hi2c4, bqChipI2CAddress)) {
+		Error_Handler();
+	}
+	if (HAL_StatusTypeDef::HAL_OK != bqChip2.Init(&hi2c3, bqChipI2CAddress)) {
+		Error_Handler();
+	}
 
 	//initalize current ADC
 	current_adc.begin(&hi2c2, 0x10); // Default address: 0x10
@@ -205,7 +205,7 @@ void StartTask03(void *argument) {
 
         for (int i = 0; i < 32; i++) {
             // Skip if cell is excluded from voltage monitoring
-        	if (BMS.voltageExclusionList[i] == 0) {
+        	if (BMS.voltageExclusionList[i] != 0) {
         		continue;
         	}
 
