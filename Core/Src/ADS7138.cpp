@@ -50,7 +50,7 @@ void ADS7138::selectChannel(ADS7138__MANUAL_CHID channel) {
 
 uint16_t ADS7138::read() {
     uint8_t buf[2] = {0};
-    HAL_I2C_Master_Receive(_i2cHandle, _deviceAddress, buf, 2, HAL_MAX_DELAY);
+    HAL_StatusTypeDef status = HAL_I2C_Master_Receive(_i2cHandle, _deviceAddress, buf, 2, HAL_MAX_DELAY);
 
     uint16_t value = 0;
     if (_currentOsr != OSR_1) {

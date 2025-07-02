@@ -102,12 +102,12 @@ void CPP_UserSetup(void) {
 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_2, GPIO_PIN_RESET);
 
 	//initalize BMS ICs
-//	if (HAL_StatusTypeDef::HAL_OK != bqChip1.Init(&hi2c4, bqChipI2CAddress)) {
-//		Error_Handler();
-//	}
-//	if (HAL_StatusTypeDef::HAL_OK != bqChip2.Init(&hi2c3, bqChipI2CAddress)) {
-//		Error_Handler();
-//	}
+	if (HAL_StatusTypeDef::HAL_OK != bqChip1.Init(&hi2c4, bqChipI2CAddress)) {
+		Error_Handler();
+	}
+	if (HAL_StatusTypeDef::HAL_OK != bqChip2.Init(&hi2c3, bqChipI2CAddress)) {
+		Error_Handler();
+	}
 
 	//initalize current ADC
 	current_adc.begin(&hi2c2, 0x10); // Default address: 0x10
@@ -142,7 +142,9 @@ void StartDefaultTask(void *argument) {
   /* Infinite loop */
   for(;;)
   {
-
+	if (faultCondition != noFault) {
+		HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_0);
+	}
 	HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_1);
     osDelay(500);
   }
@@ -152,35 +154,50 @@ void StartDefaultTask(void *argument) {
 // CURRENT MONITORING TASK
 void StartTask02(void *argument) {
 
-	uint32_t rawData;
-	float low;
+	uint32_t rawDataLow = 0;
+	float low = 0;
+	double sum = 0;
+
+	//static std::vector<float> filter;
 
 	for (;;)
 	{
 
 		if (hi2c2.State == HAL_I2C_STATE_READY) {
+			sum = 0;
+			for (int i = 0; i < 5; i++) {
+				rawDataLow = current_adc.readChannelVoltage((ADS7138__MANUAL_CHID)(MANUAL_CHID_AIN0));
+				sum += ADCToCurrentL(rawDataLow);
+			}
+			low = sum/5;
 
-			rawData = current_adc.readChannelVoltage((ADS7138__MANUAL_CHID)(MANUAL_CHID_AIN0));
-			low  = ADCToCurrentL(rawData);
-
-			// If positive current, discharging
-			if (abs(low) == low) {
+			// If negative current, discharging
+			if (abs(low) != low) {
 				currentDirrection = discharging;
-				if (low > 26) {
-					faultCondition = overCurrentCharge;
+				if (abs(low) > 49) {
+					faultCondition = overCurrentDischarge;
 				}
 			} else { // Else current will be negative, thus charging
 				currentDirrection = charging;
-				if (abs(low) > 60) {
-					faultCondition = overCurrentDischarge;
+				if (low > 24.5) {
+					faultCondition = overCurrentCharge;
 				}
 			}
 		}
 
+		//
+		//
+		/*
+		 * 27347 = 0
+		 * 24743 = -6A
+		 * 21842 = -12A
+		 * 16787 = -24A
+		 */
+
 		BMS.lowCurrent_A = low;
 		fb.value = low;
 
-		osDelay(50);
+		osDelay(100);
 	}
 }
 
@@ -267,9 +284,9 @@ void StartTask04(void *argument) {
             for (uint8_t ch = 0; ch < 8; ch++) {
                 uint8_t sensor_index = i*8 + ch;
 
-//                if (BMS.tempExclusionList[i] == 0) {
-//                	continue;
-//                }
+                if (BMS.tempExclusionList[sensor_index]) {
+                	continue;
+                }
 
                 if (hi2c2.State == HAL_I2C_STATE_READY) {
                     rawData[sensor_index] = temp_adcs[i].readChannelVoltage((ADS7138__MANUAL_CHID)(MANUAL_CHID_AIN0 + ch));
@@ -419,10 +436,10 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1) {
 
 float ADCToCurrentL(uint32_t adc_val) {
     // Constant slope for linear estimator
-    static constexpr float m = 0.001894;
+    static constexpr float m = 0.002294;
 
     // Constant offset for linear estimator
-    static constexpr float b = -62.87;
+    static constexpr float b = -62.73;
 
     // Convert ADC value to current
     return (float)adc_val * m + b;

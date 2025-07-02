@@ -70,7 +70,7 @@ HAL_StatusTypeDef BQ76952::ReadVoltages() {
 //    	if((i == 0) || (i == 1) || (i == 15)){
     		for (int retry = 0; retry < 5; retry++) {
 				status = DirectReadI2(CELL_NO_TO_ADDR(i+1), &cell_voltages_[i]);
-				if (status == HAL_OK && cell_voltages_[i] < 4200 && cell_voltages_[i] > 1000) break;  // 1V to 5V is reasonable
+				if (status == HAL_OK && cell_voltages_[i] < 6200 && cell_voltages_[i] > 1000) break;  // 1V to 5V is reasonable
     		}
     		if(cell_voltages_[i] < 0 || cell_voltages_[i] > 10000){
     			cell_voltages_[i] = 3890;
