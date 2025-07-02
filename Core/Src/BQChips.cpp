@@ -16,8 +16,8 @@ BQChips::BQChips(BQ76952 *chip1, BQ76952 *chip2){
 
 // read functions
 HAL_StatusTypeDef BQChips::readVoltages(){
-	HAL_StatusTypeDef status = pChip1 -> ReadVoltages();
-	if (status != HAL_OK)	{return status;}
+	HAL_StatusTypeDef status;// = pChip1 -> ReadVoltages();
+	//if (status != HAL_OK)	{return status;}
 
 	status = pChip2 -> ReadVoltages();
 	if (status != HAL_OK)	{return status;}

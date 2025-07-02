@@ -3,6 +3,7 @@
 #include "BQChips.hpp"
 #include "BMS.hpp"
 #include "stdio.h"
+#include "main.h"
 
 #include <cmath>
 
@@ -77,6 +78,97 @@ typedef struct {
 } Exclusion_Data_t;
 
 
+static void MX_I2C3_Init(void)
+{
+
+  /* USER CODE BEGIN I2C3_Init 0 */
+
+  /* USER CODE END I2C3_Init 0 */
+
+  /* USER CODE BEGIN I2C3_Init 1 */
+
+  /* USER CODE END I2C3_Init 1 */
+  hi2c3.Instance = I2C3;
+  hi2c3.Init.Timing = 0x00100D14;
+  hi2c3.Init.OwnAddress1 = 0;
+  hi2c3.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+  hi2c3.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  hi2c3.Init.OwnAddress2 = 0;
+  hi2c3.Init.OwnAddress2Masks = I2C_OA2_NOMASK;
+  hi2c3.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  hi2c3.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+  if (HAL_I2C_Init(&hi2c3) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Configure Analogue filter
+  */
+  if (HAL_I2CEx_ConfigAnalogFilter(&hi2c3, I2C_ANALOGFILTER_ENABLE) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Configure Digital filter
+  */
+  if (HAL_I2CEx_ConfigDigitalFilter(&hi2c3, 0) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN I2C3_Init 2 */
+
+  /* USER CODE END I2C3_Init 2 */
+
+}
+
+/**
+  * @brief I2C4 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_I2C4_Init(void)
+{
+
+  /* USER CODE BEGIN I2C4_Init 0 */
+
+  /* USER CODE END I2C4_Init 0 */
+
+  /* USER CODE BEGIN I2C4_Init 1 */
+
+  /* USER CODE END I2C4_Init 1 */
+  hi2c4.Instance = I2C4;
+  hi2c4.Init.Timing = 0x00100D14;
+  hi2c4.Init.OwnAddress1 = 0;
+  hi2c4.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+  hi2c4.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  hi2c4.Init.OwnAddress2 = 0;
+  hi2c4.Init.OwnAddress2Masks = I2C_OA2_NOMASK;
+  hi2c4.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  hi2c4.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+  if (HAL_I2C_Init(&hi2c4) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Configure Analogue filter
+  */
+  if (HAL_I2CEx_ConfigAnalogFilter(&hi2c4, I2C_ANALOGFILTER_ENABLE) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Configure Digital filter
+  */
+  if (HAL_I2CEx_ConfigDigitalFilter(&hi2c4, 0) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN I2C4_Init 2 */
+
+  /* USER CODE END I2C4_Init 2 */
+
+}
+
 void CPP_UserSetup(void) {
     // Make sure that timer priorities are configured correctly
     HAL_Delay(10);
@@ -102,9 +194,9 @@ void CPP_UserSetup(void) {
 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_2, GPIO_PIN_RESET);
 
 	//initalize BMS ICs
-	if (HAL_StatusTypeDef::HAL_OK != bqChip1.Init(&hi2c4, bqChipI2CAddress)) {
-		Error_Handler();
-	}
+//	if (HAL_StatusTypeDef::HAL_OK != bqChip1.Init(&hi2c4, bqChipI2CAddress)) {
+//		Error_Handler();
+//	}
 	if (HAL_StatusTypeDef::HAL_OK != bqChip2.Init(&hi2c3, bqChipI2CAddress)) {
 		Error_Handler();
 	}
@@ -174,12 +266,12 @@ void StartTask02(void *argument) {
 			// If negative current, discharging
 			if (abs(low) != low) {
 				currentDirrection = discharging;
-				if (abs(low) > 49) {
+				if (abs(low) > 45.5) {
 					faultCondition = overCurrentDischarge;
 				}
 			} else { // Else current will be negative, thus charging
 				currentDirrection = charging;
-				if (low > 24.5) {
+				if (low > 23) {
 					faultCondition = overCurrentCharge;
 				}
 			}
@@ -203,6 +295,7 @@ void StartTask02(void *argument) {
 
 // VOLTAGE MONITORING TASK
 void StartTask03(void *argument) {
+	static int errorCount = 0;
     int16_t cellVoltages[32] = {0};
     uint16_t highestCell = 0;
     uint16_t lowestCell = 10000;
@@ -212,15 +305,32 @@ void StartTask03(void *argument) {
     uint8_t active_cell_count = 0;  // Count of non-excluded cells
 
     for(;;) {
+
+
+
+    	if (HAL_StatusTypeDef::HAL_OK != bqChip1.Init(&hi2c4, bqChipI2CAddress)) {
+    		//Error_Handler();
+    		MX_I2C4_Init();
+    		errorCount += 1;
+		}
+		if (HAL_StatusTypeDef::HAL_OK != bqChip2.Init(&hi2c3, bqChipI2CAddress)) {
+			//Error_Handler();
+			MX_I2C3_Init();
+			errorCount += 1;
+		}
+
         total = 0;
         highestCell = 0;
         lowestCell = 10000;
         active_cell_count = 0;
 
         bqChips.readVoltages();
+//        if (status != HAL_OK) {
+//        	Error_Handler();
+//        }
         bqChips.getAll32CellVoltages(cellVoltages);
 
-        for (int i = 0; i < 32; i++) {
+        for (int i = 16; i < 32; i++) {
             // Skip if cell is excluded from voltage monitoring
         	if (BMS.voltageExclusionList[i] != 0) {
         		continue;
@@ -260,7 +370,7 @@ void StartTask03(void *argument) {
             }
         }
 
-        osDelay(100);
+        osDelay(250);
     }
 }
 
@@ -319,16 +429,26 @@ void StartTask04(void *argument) {
         BMS.highTemp = highestCell;
 
         // Only check temperature limits for non-excluded sensors
-        if (currentDirrection == charging) {
-            if (highestCell > 45) {
-                faultCondition = overTempCharge;
-            }
-        }
-        if (currentDirrection == discharging) {
-            if (highestCell > 60) {
-                faultCondition = overTempDischarge;
-            }
-        }
+//        if (currentDirrection == charging) {
+//            if (highestCell > 45) {
+//                faultCondition = overTempCharge;
+//            }
+//        }
+//        if (currentDirrection == discharging) {
+//            if (highestCell > 60) {
+//                faultCondition = overTempDischarge;
+//            }
+//        }
+           if (currentDirrection == charging) {
+			   if (highestCell > 44.5) {
+				   faultCondition = overTempCharge;
+			   }
+		   }
+		   if (currentDirrection == discharging) {
+			   if (highestCell > 59) {
+				   faultCondition = overTempDischarge;
+			   }
+		   }
 
         osDelay(1000);
     }
@@ -436,10 +556,10 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1) {
 
 float ADCToCurrentL(uint32_t adc_val) {
     // Constant slope for linear estimator
-    static constexpr float m = 0.002294;
+    static constexpr float m = 0.002394;
 
     // Constant offset for linear estimator
-    static constexpr float b = -62.73;
+    static constexpr float b = -64.73;
 
     // Convert ADC value to current
     return (float)adc_val * m + b;
@@ -545,5 +665,7 @@ void send_bms_data(uint16_t* cell_voltages, float* temperatures, float current) 
     // Send the entire structure as raw data
     CDC_Transmit_FS((uint8_t*)&data, sizeof(BMS_Data_t));
 }
+
+
 
 

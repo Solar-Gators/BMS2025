@@ -228,7 +228,7 @@ int main(void)
   /* creation of Voltage_Monitor */
   Voltage_MonitorHandle = osThreadNew(StartTask02, NULL, &Voltage_Monitor_attributes);
 
-  /* creation of Temp_Monitoring */
+//  /* creation of Temp_Monitoring */
   Temp_MonitoringHandle = osThreadNew(StartTask03, NULL, &Temp_Monitoring_attributes);
 
   /* creation of Current_Monitor */
